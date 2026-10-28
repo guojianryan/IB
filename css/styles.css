@@ -101,7 +101,7 @@ p { margin: 0 0 0.8em; }
 }
 
 .lede {
-  max-width: 68ch;
+  max-width: none;
   color: var(--muted);
   font-size: 1.08rem;
 }
@@ -312,7 +312,7 @@ header {
 
 section.block, .hero { scroll-margin-top: 76px; }
 
-section.block { padding: 34px 0; }
+section.block { padding: 3.25rem 0; }
 
 code {
   font-family: var(--mono);
@@ -322,8 +322,8 @@ code {
 
 .section-head { margin-bottom: 18px; }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .grid-6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 
 .card, .lab, .callout, .map-card, .fn, .q, .check-list, .worked {
@@ -333,7 +333,12 @@ code {
   padding: 16px 18px;
 }
 
-.card h3, .map-card h3, .fn h3 { font-family: var(--sans); letter-spacing: 0; font-size: 1.02rem; }
+.card h3, .map-card h3, .fn h3, .q h3, .worked h3 {
+  font-family: var(--sans);
+  letter-spacing: 0;
+  font-size: 1.02rem;
+  margin-bottom: 0.9rem;
+}
 
 .map-card {
   color: inherit;
@@ -349,25 +354,26 @@ code {
   font-family: var(--mono);
   font-size: 0.75rem;
   color: var(--teal);
-  margin-bottom: 6px;
+  margin-bottom: 0.7rem;
 }
 
 .card p:last-child, .fn p:last-child, .callout p:last-child { margin-bottom: 0; }
 
-.card ul, .q ul { margin: 0.3em 0 0; padding-left: 1.1em; }
-.card li + li { margin-top: 0.35em; }
+.card ul, .q ul { margin: 0.35rem 0 0; padding-left: 1.1em; }
+.card li + li { margin-top: 0.6em; }
 
 .card.internet { box-shadow: inset 3px 0 0 var(--teal); }
 .card.www { box-shadow: inset 3px 0 0 var(--amber); }
 
 .callout.exam { box-shadow: inset 3px 0 0 var(--coral); }
 .callout.note { box-shadow: inset 3px 0 0 var(--blue); }
-.callout strong { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+.callout strong { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 0.5rem; }
 .callout.exam strong { color: var(--coral); }
 .callout.note strong { color: var(--blue); }
 
 .lab { margin-top: 16px; }
-.lab h3 { margin-bottom: 6px; }
+.lab h3 { margin-bottom: 0.9rem; }
+.lab > p { margin-bottom: 1.15rem; }
 
 label.field { display: block; font-size: 0.92rem; color: var(--muted); margin-bottom: 8px; }
 
@@ -535,7 +541,7 @@ textarea { min-height: 110px; resize: vertical; font-family: var(--sans); }
 
 .scoreboard strong { display: block; font-family: var(--serif); font-size: 1.6rem; }
 
-.check-list { display: grid; gap: 8px; }
+.check-list { display: grid; gap: 12px; }
 .check-list label {
   display: flex;
   gap: 10px;
@@ -552,10 +558,10 @@ footer {
   font-size: 0.92rem;
 }
 
-.stack { display: grid; gap: 8px; }
+.stack { display: grid; gap: 12px; }
 
 .paper-label {
-  margin: 36px 0 8px;
+  margin: 2.25rem 0 1rem;
   font-family: var(--mono);
   font-size: 0.78rem;
   letter-spacing: 0.12em;
@@ -567,7 +573,7 @@ footer {
 .chapter h2 { font-size: 1.55rem; }
 .chapter .count { color: var(--faint); font-family: var(--sans); font-size: 0.92rem; letter-spacing: 0; font-weight: 520; }
 
-.topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
 
 .topic {
   display: flex;
@@ -610,17 +616,39 @@ select {
   padding: 12px 14px;
 }
 table.sheet { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.88rem; margin-top: 12px; }
-table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; }
+table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 10px 12px; text-align: left; }
 .out { overflow-x: auto; }
 .out table.sheet { width: max-content; min-width: 100%; }
 .out table.sheet th, .out table.sheet td { white-space: nowrap; }
 .step-btn, .choice, .opt { cursor: pointer; }
-.teaching { max-width: 74ch; }
-.teaching + .teaching { margin-top: -0.2em; }
+.teaching { max-width: none; }
+
+.rhythm {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.rhythm > * { margin-top: 0; margin-bottom: 0; }
+
+.rhythm .section-head { margin-bottom: 0; }
+
+.rhythm .section-head .kicker { margin-bottom: 0.65rem; }
+
+.rhythm .section-head h2 { margin-bottom: 0.9rem; }
+
+.rhythm .section-head > :last-child { margin-bottom: 0; }
+
+.review-panel { display: flex; flex-direction: column; gap: 1rem; }
+
+.prose p { margin: 0; }
+
+.prose p + p { margin-top: 1.35rem; }
+
 .worked { margin-top: 16px; }
 .worked h3 { font-family: var(--sans); letter-spacing: 0; font-size: 1.02rem; }
 .steps { margin: 0.3em 0 0; padding-left: 1.25em; }
-.steps li + li { margin-top: 0.45em; }
+.steps li + li { margin-top: 0.7em; }
 .grid-2 + .grid-2, .teaching + .grid-2, .grid-2 + .worked, .grid-2 + .grid-3 { margin-top: 16px; }
 .tabset { margin-top: 16px; }
 .tabbar { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -790,7 +818,7 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
   display: flex;
   gap: 10px;
   align-items: baseline;
-  margin-bottom: 8px;
+  margin-bottom: 0.75rem;
 }
 
 .code-figure figcaption,
@@ -798,7 +826,7 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
 .classbox-wrap figcaption {
   color: var(--muted);
   font-size: 0.95rem;
-  margin-top: 8px;
+  margin-top: 0.95rem;
 }
 
 .code-scroll {
@@ -890,6 +918,21 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
 .card.bad { box-shadow: inset 3px 0 0 var(--coral); }
 
 .more { margin-top: 12px; }
+
+.rhythm > .code-figure,
+.rhythm > .uml-frame,
+.rhythm > .classbox-wrap,
+.rhythm > .worked,
+.rhythm > .steps,
+.rhythm > .tabset,
+.rhythm > .lab,
+.rhythm > .more,
+.rhythm > .grid-2,
+.rhythm > .grid-3,
+.rhythm > .q,
+.rhythm > .scoreboard {
+  margin-top: 0;
+}
 
 .log {
   margin: 10px 0 0;

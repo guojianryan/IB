@@ -135,7 +135,7 @@ function hero(topic) {
 function syllabusMap(topic) {
   const section = el("section", "block");
   section.id = "syllabus";
-  const wrap = el("div", "wrap");
+  const wrap = el("div", "wrap rhythm");
   const head = el("div", "section-head");
   head.append(el("p", "kicker", "Syllabus map"));
   head.append(el("h2", "", topic.mapTitle || "What this topic asks"));
@@ -158,13 +158,25 @@ function syllabusMap(topic) {
 function teach(section) {
   const block = el("section", "block");
   block.id = section.id;
-  const wrap = el("div", "wrap");
+  const wrap = el("div", "wrap rhythm");
   const head = el("div", "section-head");
   head.append(el("p", "kicker", section.kicker || ""));
   head.append(el("h2", "", section.title));
   if (section.lede) head.append(el("p", "lede", section.lede));
   wrap.append(head);
-  (section.blocks || []).forEach((item) => wrap.append(renderBlock(item)));
+  let prose = null;
+  (section.blocks || []).forEach((item) => {
+    if (item.type !== "p") {
+      prose = null;
+      wrap.append(renderBlock(item));
+      return;
+    }
+    if (!prose) {
+      prose = el("div", "prose");
+      wrap.append(prose);
+    }
+    prose.append(renderBlock(item));
+  });
   block.append(wrap);
   return block;
 }
@@ -731,7 +743,7 @@ function checkLabel(box, text) {
 function practice(topic) {
   const block = el("section", "block");
   block.id = "practice";
-  const wrap = el("div", "wrap");
+  const wrap = el("div", "wrap rhythm");
   const head = el("div", "section-head");
   head.append(el("p", "kicker", "Quick check"));
   head.append(el("h2", "", "Choose an answer"));
@@ -769,9 +781,11 @@ function practice(topic) {
 function review(topic) {
   const block = el("section", "block");
   block.id = "review";
-  const wrap = el("div", "wrap");
-  wrap.append(el("p", "kicker", "Review"));
-  wrap.append(el("h2", "", "Leave the topic able to say these"));
+  const wrap = el("div", "wrap rhythm");
+  const head = el("div", "section-head");
+  head.append(el("p", "kicker", "Review"));
+  head.append(el("h2", "", "Leave the topic able to say these"));
+  wrap.append(head);
   const list = el("div", "check-list");
   const key = `ib-${topic.id}-checklist`;
   let saved = [];
@@ -803,7 +817,9 @@ function review(topic) {
     boxes.forEach((box) => { box.checked = false; });
     paint();
   }, "btn small ghost"));
-  wrap.append(list, actions);
+  const panel = el("div", "review-panel");
+  panel.append(list, actions);
+  wrap.append(panel);
   block.append(wrap);
   paint();
   return block;
