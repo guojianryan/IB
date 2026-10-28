@@ -525,7 +525,7 @@ function readout(lines) {
 
 const labs = {
   library(spec) {
-    return labFrame(spec.title || "Try the book", spec.lede || "One LibraryBook object. Borrow and return change its own state, and the methods enforce the rule.", (box) => {
+    return labFrame(spec.title || "Try the book", spec.lede || "One LibraryBook object. Borrowing and returning change that book's own state, and the methods enforce the rule.", (box) => {
       const book = { title: "1984", author: "George Orwell", onLoan: false };
       const status = el("div");
       const feedback = el("p", "feedback");
