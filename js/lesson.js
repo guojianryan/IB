@@ -1,3 +1,21 @@
+const CLASS_NAMES = "User Book Member Loan Player Enemy Item Product Cart Order Teacher Person Student Bike Car Date Shape Rectangle Circle Triangle Parent Child Team Engine Hospital Department Folder File Calculator Settings Observer Secret Subject Segment LibraryBook BankAccount ShoppingCart PaymentMethod CardPayment CashPayment BaseNotifier EmailNotifier SMSNotifier PushNotifier NotifierFactory WeatherStation PhoneDisplay TVDisplay AttributeError ValueError TypeError".split(" ");
+
+const CODE_PATTERN = new RegExp(
+  [
+    "@[A-Za-z_][\\w.]*",
+    "==",
+    "(?:[A-Za-z_]\\w*(?:\\((?:[^()]|\"[^\"]*\"|'[^']*')*\\))?)(?:\\.[A-Za-z_]\\w*(?:\\((?:[^()]|\"[^\"]*\"|'[^']*')*\\))?)+",
+    "\\b[A-Za-z_]\\w*\\((?:[^()]|\"[^\"]*\"|'[^']*')*\\)",
+    "\\b_[A-Za-z0-9_]+\\b",
+    "\\b[A-Za-z][A-Za-z0-9]*_[A-Za-z0-9_]*\\b",
+    "\\b[A-Z][a-z0-9]+(?:[A-Z][A-Za-z0-9]+)+\\b",
+    `\\b(?:${CLASS_NAMES.join("|")})\\b`,
+    "\\b[a-z][a-z0-9]*\\d[a-z0-9]*\\b",
+    "\\b(?:self|cls)\\b",
+  ].join("|"),
+  "g",
+);
+
 function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -5,8 +23,46 @@ function el(tag, className, text) {
   return node;
 }
 
+function richEl(tag, className, text) {
+  const node = el(tag, className);
+  if (text != null) appendRich(node, text);
+  return node;
+}
+
+function appendRich(node, text) {
+  const value = String(text);
+  const parts = value.split("`");
+  const balanced = parts.length % 2 === 1;
+  const chunks = balanced ? parts : [value];
+  chunks.forEach((chunk, index) => {
+    if (balanced && index % 2 === 1) {
+      node.append(codeEl(chunk));
+      return;
+    }
+    let cursor = 0;
+    CODE_PATTERN.lastIndex = 0;
+    for (const match of chunk.matchAll(CODE_PATTERN)) {
+      if (match.index > cursor) node.append(document.createTextNode(chunk.slice(cursor, match.index)));
+      node.append(codeEl(match[0]));
+      cursor = match.index + match[0].length;
+    }
+    if (cursor < chunk.length) node.append(document.createTextNode(chunk.slice(cursor)));
+  });
+}
+
+function codeEl(text) {
+  const code = document.createElement("code");
+  code.textContent = text;
+  return code;
+}
+
+function setRich(node, text) {
+  node.replaceChildren();
+  appendRich(node, text);
+}
+
 function button(label, onClick, className = "btn small") {
-  const node = el("button", className, label);
+  const node = richEl("button", className, label);
   node.type = "button";
   node.addEventListener("click", onClick);
   return node;
@@ -114,7 +170,7 @@ function hero(topic) {
   const wrap = el("div", "wrap");
   wrap.append(el("p", "kicker", topic.kicker));
   wrap.append(el("h1", "", topic.title));
-  wrap.append(el("p", "lede", topic.lede));
+  wrap.append(richEl("p", "lede", topic.lede));
   const actions = el("div", "actions");
   const start = el("a", "btn", "Start the lesson");
   start.href = topic.map?.[0]?.[0] || `#${topic.sections[0].id}`;
@@ -139,15 +195,15 @@ function syllabusMap(topic) {
   const head = el("div", "section-head");
   head.append(el("p", "kicker", "Syllabus map"));
   head.append(el("h2", "", topic.mapTitle || "What this topic asks"));
-  head.append(el("p", "lede", topic.mapLede || "Each card is one syllabus statement. Open it for the explanation, the code, and the points worth remembering."));
+  head.append(richEl("p", "lede", topic.mapLede || "Each card is one syllabus statement. Open it for the explanation, the code, and the points worth remembering."));
   wrap.append(head);
   const grid = el("div", topic.map.length > 4 ? "grid-3" : "grid-2");
   topic.map.forEach(([href, code, title, text]) => {
     const cardLink = el("a", "map-card");
     cardLink.href = href;
     cardLink.append(el("span", "", code));
-    cardLink.append(el("h3", "", title));
-    cardLink.append(el("p", "", text));
+    cardLink.append(richEl("h3", "", title));
+    cardLink.append(richEl("p", "", text));
     grid.append(cardLink);
   });
   wrap.append(grid);
@@ -161,8 +217,8 @@ function teach(section) {
   const wrap = el("div", "wrap rhythm");
   const head = el("div", "section-head");
   head.append(el("p", "kicker", section.kicker || ""));
-  head.append(el("h2", "", section.title));
-  if (section.lede) head.append(el("p", "lede", section.lede));
+  head.append(richEl("h2", "", section.title));
+  if (section.lede) head.append(richEl("p", "lede", section.lede));
   wrap.append(head);
   let prose = null;
   (section.blocks || []).forEach((item) => {
@@ -182,7 +238,7 @@ function teach(section) {
 }
 
 function renderBlock(item) {
-  if (item.type === "p") return el("p", "teaching", item.text);
+  if (item.type === "p") return richEl("p", "teaching", item.text);
   if (item.type === "list") return bulletList(item.items);
   if (item.type === "columns") return columns(item);
   if (item.type === "table") return dataTable(item);
@@ -199,12 +255,12 @@ function renderBlock(item) {
     paragraph.append(link);
     return paragraph;
   }
-  return el("p", "teaching", "");
+  return richEl("p", "teaching", "");
 }
 
 function bulletList(items) {
   const list = el("ul", "steps");
-  items.forEach((item) => list.append(el("li", "", item)));
+  items.forEach((item) => list.append(richEl("li", "", item)));
   return list;
 }
 
@@ -212,11 +268,11 @@ function columns(spec) {
   const grid = el("div", spec.items.length > 2 ? "grid-3" : "grid-2");
   spec.items.forEach((column) => {
     const article = el("article", `card${column.tone ? ` ${column.tone}` : ""}`);
-    article.append(el("h3", "", column.title));
-    if (column.text) article.append(el("p", "", column.text));
+    article.append(richEl("h3", "", column.title));
+    if (column.text) article.append(richEl("p", "", column.text));
     if (column.points) {
       const list = el("ul");
-      column.points.forEach((point) => list.append(el("li", "", point)));
+      column.points.forEach((point) => list.append(richEl("li", "", point)));
       article.append(list);
     }
     grid.append(article);
@@ -235,15 +291,15 @@ function pair(spec) {
 
 function dataTable(spec) {
   const box = el("div", "worked");
-  if (spec.title) box.append(el("h3", "", spec.title));
-  if (spec.lede) box.append(el("p", "", spec.lede));
+  if (spec.title) box.append(richEl("h3", "", spec.title));
+  if (spec.lede) box.append(richEl("p", "", spec.lede));
   const table = el("table", "sheet");
   const head = el("tr");
-  spec.head.forEach((cell) => head.append(el("th", "", cell)));
+  spec.head.forEach((cell) => head.append(richEl("th", "", cell)));
   table.append(head);
   spec.rows.forEach((row) => {
     const line = el("tr");
-    row.forEach((cell) => line.append(el("td", "", String(cell))));
+    row.forEach((cell) => line.append(richEl("td", "", String(cell))));
     table.append(line);
   });
   const scroller = el("div", "out");
@@ -256,13 +312,13 @@ function codeBlock(spec) {
   const box = el("figure", "code-figure");
   const bar = el("div", "code-bar");
   bar.append(el("span", "marks", spec.lang || "Python"));
-  if (spec.title) bar.append(el("span", "", spec.title));
+  if (spec.title) bar.append(richEl("span", "", spec.title));
   box.append(bar);
   const scroller = el("div", "code-scroll");
   scroller.tabIndex = 0;
   scroller.append(highlight(spec.source, (spec.lang || "Python").toLowerCase()));
   box.append(scroller);
-  if (spec.caption) box.append(el("figcaption", "", spec.caption));
+  if (spec.caption) box.append(richEl("figcaption", "", spec.caption));
   return box;
 }
 
@@ -276,7 +332,7 @@ function classBox(spec) {
   box.append(compartment(spec.attrs));
   box.append(compartment(spec.ops));
   wrap.append(box);
-  if (spec.caption) wrap.append(el("figcaption", "", spec.caption));
+  if (spec.caption) wrap.append(richEl("figcaption", "", spec.caption));
   return wrap;
 }
 
@@ -291,7 +347,7 @@ function compartment(lines) {
 function callout(label, text, kind) {
   const box = el("aside", `callout ${kind || "note"}`);
   box.append(el("strong", "", label || "Remember"));
-  box.append(el("p", "", text));
+  box.append(richEl("p", "", text));
   return box;
 }
 
@@ -326,7 +382,7 @@ function umlDiagram(spec) {
   const scroller = el("div", "out");
   scroller.append(svg);
   frame.append(scroller);
-  if (spec.caption) frame.append(el("figcaption", "", spec.caption));
+  if (spec.caption) frame.append(richEl("figcaption", "", spec.caption));
   return frame;
 }
 
@@ -454,8 +510,8 @@ function anchors(from, to, axis) {
 
 function labFrame(title, lede, build) {
   const box = el("div", "lab");
-  box.append(el("h3", "", title));
-  if (lede) box.append(el("p", "", lede));
+  box.append(richEl("h3", "", title));
+  if (lede) box.append(richEl("p", "", lede));
   build(box);
   return box;
 }
@@ -480,19 +536,19 @@ const labs = {
           `_on_loan: ${book.onLoan}`,
         ]));
         feedback.className = ok ? "feedback good" : "feedback bad";
-        feedback.textContent = message;
+        setRich(feedback, message);
       }
       const actions = el("div", "row-actions");
       actions.append(button("borrow()", () => {
-        if (book.onLoan) paint("borrow() returns False. The book is already on loan, so the state stays True.", false);
+        if (book.onLoan) paint("borrow() returns `False`. The book is already on loan, so the state stays `True`.", false);
         else {
           book.onLoan = true;
-          paint("borrow() returns True. _on_loan changes from False to True.");
+          paint("borrow() returns `True`. _on_loan changes from `False` to `True`.");
         }
       }));
       actions.append(button("return_book()", () => {
         book.onLoan = false;
-        paint("return_book() sets _on_loan back to False. It does not return a value.");
+        paint("return_book() sets _on_loan back to `False`. It does not return a value.");
       }, "btn small ghost"));
       box.append(status, actions, feedback);
       paint("The constructor has run. The book starts on the shelf.");
@@ -500,7 +556,7 @@ const labs = {
   },
 
   bikes(spec) {
-    return labFrame(spec.title || "Bikes: one value each, one value shared", spec.lede || "speed belongs to a bike. count belongs to the class. Accelerating one bike must not change the others.", (box) => {
+    return labFrame(spec.title || "Bikes: one value each, one value shared", spec.lede || "`speed` belongs to a bike. `count` belongs to the class. Accelerating one bike must not change the others.", (box) => {
       const bikes = [];
       let count = 0;
       const speed = el("input");
@@ -536,7 +592,7 @@ const labs = {
   },
 
   references(spec) {
-    return labFrame(spec.title || "Two names, how many objects?", spec.lede || "acc2 = acc1 copies the reference. It does not copy the account. Deposit through either name and both see the new balance.", (box) => {
+    return labFrame(spec.title || "Two names, how many objects?", spec.lede || "`acc2 = acc1` copies the reference. It does not copy the account. Deposit through either name and both see the new balance.", (box) => {
       let shared = { owner: "Alice", balance: 500 };
       let acc1 = shared;
       let acc2 = shared;
@@ -550,7 +606,7 @@ const labs = {
           `acc1 is acc2 → ${acc1 === acc2}`,
         ]));
         feedback.className = "feedback";
-        feedback.textContent = message;
+        setRich(feedback, message);
       }
       const actions = el("div", "row-actions");
       actions.append(button("acc2.deposit(200)", () => {
@@ -588,13 +644,13 @@ const labs = {
       function paint(message, ok) {
         status.replaceChildren(readout([`balance = ${balance}`]));
         feedback.className = ok === false ? "feedback bad" : "feedback good";
-        feedback.textContent = message;
+        setRich(feedback, message);
       }
       const value = () => Number(amount.value);
       const actions = el("div", "row-actions");
       actions.append(button("deposit", () => {
         const money = value();
-        if (!(money > 0)) paint("deposit refuses a value that is not positive. State unchanged.", false);
+        if (!(money > 0)) paint("`deposit` refuses a value that is not positive. State unchanged.", false);
         else {
           balance += money;
           paint(`Deposited ${money}. The method updated _balance.`);
@@ -602,10 +658,10 @@ const labs = {
       }));
       actions.append(button("withdraw", () => {
         const money = value();
-        if (!(money > 0 && money <= balance)) paint("withdraw returns False. The amount must be positive and no more than the balance.", false);
+        if (!(money > 0 && money <= balance)) paint("`withdraw` returns `False`. The amount must be positive and no more than the balance.", false);
         else {
           balance -= money;
-          paint(`Withdrew ${money}. withdraw returns True.`);
+          paint(`Withdrew ${money}. \`withdraw\` returns \`True\`.`);
         }
       }, "btn small ghost"));
       actions.append(button("Set balance to −50", () => {
@@ -689,7 +745,7 @@ const labs = {
   },
 
   observer(spec) {
-    return labFrame(spec.title || "The station notifies whoever is attached", spec.lede || "WeatherStation does not contain phone or television code. It calls update on each attached observer. Detach one and the next reading skips it.", (box) => {
+    return labFrame(spec.title || "The station notifies whoever is attached", spec.lede || "WeatherStation does not contain phone or television code. It calls `update` on each attached observer. Detach one and the next reading skips it.", (box) => {
       const phone = el("input");
       phone.type = "checkbox";
       phone.id = "obs-phone";
@@ -736,7 +792,8 @@ function numberField(name, value) {
 
 function checkLabel(box, text) {
   const label = el("label");
-  label.append(box, document.createTextNode(` ${text}`));
+  label.append(box, document.createTextNode(" "));
+  appendRich(label, text);
   return label;
 }
 
@@ -753,7 +810,7 @@ function practice(topic) {
   let correct = 0;
   topic.mcqs.forEach((item, index) => {
     const card = el("article", "q");
-    card.append(el("h3", "", `${index + 1}. ${item.q}`));
+    card.append(richEl("h3", "", `${index + 1}. ${item.q}`));
     const options = el("div", "stack");
     item.options.forEach((option, optionIndex) => {
       options.append(button(option, () => {
@@ -762,7 +819,7 @@ function practice(topic) {
         options.children[optionIndex].classList.add(right ? "is-correct" : "is-wrong");
         if (!right) options.children[item.answer].classList.add("is-correct");
         else correct += 1;
-        card.append(el("p", right ? "feedback good" : "feedback", item.why));
+        card.append(richEl("p", right ? "feedback good" : "feedback", item.why));
         score.textContent = `${correct} / ${topic.mcqs.length}`;
       }, "opt"));
     });
@@ -800,7 +857,8 @@ function review(topic) {
     box.name = box.id;
     box.value = String(index);
     box.checked = known.has(String(index));
-    label.append(box, document.createTextNode(` ${text}`));
+    label.append(box, document.createTextNode(" "));
+    appendRich(label, text);
     list.append(label);
     boxes.push(box);
   });

@@ -316,9 +316,15 @@ section.block { padding: 3.25rem 0; }
 
 code {
   font-family: var(--mono);
-  font-size: 0.88em;
+  font-size: 0.86em;
   color: var(--amber);
+  background: rgba(255, 193, 77, 0.14);
+  border-radius: 0.28em;
+  padding: 0.05em 0.34em;
+  letter-spacing: 0;
 }
+
+h1 code, h2 code, h3 code { font-size: 0.78em; }
 
 .section-head { margin-bottom: 18px; }
 

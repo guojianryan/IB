@@ -108,7 +108,7 @@ book = LibraryBook("1984", "George Orwell")
 print(book.borrow())     # True
 print(book._on_loan)     # True
 print(book.borrow())     # False, already out`,
-          caption: "The object stores _title, _author and _on_loan. borrow and return_book are the only behaviours that should change that flag. The single underscore says those attributes are internal.",
+          caption: "The object stores _title, _author and _on_loan. `borrow` and return_book are the only behaviours that should change that flag. The single underscore says those attributes are internal.",
         },
         { type: "lab", name: "library" },
         { type: "callout", kind: "exam", label: "Exam watch", text: "If the question says \"evaluate\", name the idea and then say when it helps and when it does not. \"OOP allows code reuse\" on its own is thin. \"The Book class can be used by Loan and by the catalogue, but a one-off conversion script does not need a class hierarchy\" is an evaluation." },
@@ -155,7 +155,7 @@ print(book.borrow())     # False, already out`,
             "+ drop(course: str) → None",
             "+ is_enrolled(course: str) → bool",
           ],
-          caption: "Minus is private, plus is public. The attributes are the state. The three methods are the behaviour. is_enrolled only reports; enrol and drop change the list.",
+          caption: "Minus is private, plus is public. The attributes are the state. The three methods are the behaviour. is_enrolled only reports; `enrol` and `drop` change the list.",
         },
         {
           type: "code",
@@ -176,9 +176,9 @@ print(book.borrow())     # False, already out`,
 
     def is_enrolled(self, course: str) -> bool:
         return course in self.courses`,
-          caption: "This version leaves name, student_id and courses public, so it does not yet match the minus signs on the diagram. A closer match stores _name, _student_id and _courses and lets outside code use the three methods only. The responsibility is unchanged: this class manages one student's course list.",
+          caption: "This version leaves `name`, student_id and `courses` public, so it does not yet match the minus signs on the diagram. A closer match stores _name, _student_id and _courses and lets outside code use the three methods only. The responsibility is unchanged: this class manages one student's course list.",
         },
-        { type: "callout", kind: "note", label: "Remember", text: "UML method names in the class notes use the American spelling enrol. The Python uses enroll. Either is fine in an answer if you are consistent. What an examiner is checking is the responsibility, the data, and which methods mutate state." },
+        { type: "callout", kind: "note", label: "Remember", text: "UML method names in the class notes use the American spelling `enrol`. The Python uses `enroll`. Either is fine in an answer if you are consistent. What an examiner is checking is the responsibility, the data, and which methods mutate state." },
       ],
     },
     {
@@ -186,7 +186,7 @@ print(book.borrow())     # False, already out`,
       nav: "Static",
       kicker: "B3.1.3 · Distinguish between static and non-static variables and methods",
       title: "Shared data and object data",
-      lede: "The syllabus says static and non-static. Python has no static keyword for variables. The same distinction is class attribute versus instance attribute, and class method or static method versus instance method.",
+      lede: "The syllabus says static and non-static. Python has no `static` keyword for variables. The same distinction is class attribute versus instance attribute, and class method or static method versus instance method.",
       blocks: [
         {
           type: "pair",
@@ -241,10 +241,10 @@ print(commuter.speed)       # 20
 print(racer.speed)          # 30, unchanged
 print(Bike.total_bikes())   # 2
 print(Bike.km_to_miles(10)) # 6.21371`,
-          caption: "accelerate must be an instance method because it changes one bike. total_bikes uses cls.count, so a subclass that shares the counter still works. km_to_miles uses neither a bike nor the class, so it is static: a function parked inside the class.",
+          caption: "`accelerate` must be an instance method because it changes one bike. total_bikes uses cls.count, so a subclass that shares the counter still works. km_to_miles uses neither a bike nor the class, so it is static: a function parked inside the class.",
         },
         { type: "lab", name: "bikes" },
-        { type: "callout", kind: "exam", label: "Exam watch", text: "A common slip is to store a shared total as self.count = self.count + 1 after reading a class attribute. The first time this runs, Python finds count on the class, then the assignment creates a new instance attribute that hides it. Later bikes no longer update the shared counter. Write Bike.count += 1, or type(self).count += 1, when the value is meant to be shared." },
+        { type: "callout", kind: "exam", label: "Exam watch", text: "A common slip is to store a shared total as `self.count = self.count + 1` after reading a class attribute. The first time this runs, Python finds `count` on the class, then the assignment creates a new instance attribute that hides it. Later bikes no longer update the shared counter. Write `Bike.count += 1`, or `type(self).count += 1`, when the value is meant to be shared." },
       ],
     },
     {
@@ -252,7 +252,7 @@ print(Bike.km_to_miles(10)) # 6.21371`,
       nav: "Classes",
       kicker: "B3.1.4 · Construct code to define classes and instantiate objects",
       title: "Define the class, then make an object",
-      lede: "class creates the blueprint. Calling the class name creates an object. Python makes the raw instance first, then calls __init__ to set its state.",
+      lede: "`class` creates the blueprint. Calling the class name creates an object. Python makes the raw instance first, then calls __init__ to set its state.",
       blocks: [
         {
           type: "pair",
@@ -287,7 +287,7 @@ print(my_car.speed)   # 15`,
         {
           type: "columns",
           items: [
-            { title: "Class definition", text: "The blueprint is created when Python executes the class statement. No car exists yet, and no memory is holding a make or a speed." },
+            { title: "Class definition", text: "The blueprint is created when Python executes the `class` statement. No car exists yet, and no memory is holding a make or a speed." },
             { title: "Instantiation", text: "Calling Car(...) allocates a new instance. Each call makes a distinct object, even if the arguments are identical." },
             { title: "Initialisation", text: "__init__ writes the starting state: make, and speed defaulting to 0. Skip this and the object exists but has none of the attributes the methods expect." },
           ],
@@ -318,7 +318,7 @@ parsed = Date.from_string("2026-05-07")`,
       nav: "Methods",
       kicker: "Common methods · supports B3.1.4 and B3.1.5",
       title: "Constructors, getters, setters, __str__ and __eq__",
-      lede: "These are the methods the class notes treat as standard equipment. Getters and setters are how encapsulation is actually written. __str__ and __eq__ change how an object behaves with print and ==.",
+      lede: "These are the methods the class notes treat as standard equipment. Getters and setters are how encapsulation is actually written. __str__ and __eq__ change how an object behaves with `print` and ==.",
       blocks: [
         { type: "p", text: "A getter reads a private attribute. A setter writes one, and is the place for the rule: a balance cannot be negative, a grade must be between 0 and 100, a name cannot be empty. You need both styles below. The property style is the usual Python. The get_ and set_ style is the conventional OOP form, and it is what a question written in Java vocabulary is often expecting you to recognise." },
         {
@@ -346,7 +346,7 @@ try:
     account.balance = -50
 except ValueError as error:
     print(error)         # Balance cannot be negative.`,
-          caption: "self.balance = balance inside __init__ already goes through the setter, so a BankAccount(\"Alice\", -10) fails at construction rather than storing a bad value. The stored attribute is _balance. The public name balance is the property.",
+          caption: "`self.balance = balance` inside __init__ already goes through the setter, so a BankAccount(\"Alice\", -10) fails at construction rather than storing a bad value. The stored attribute is _balance. The public name `balance` is the property.",
         },
         {
           type: "code",
@@ -373,7 +373,7 @@ except ValueError as error:
     print(error)              # Balance cannot be negative.`,
           caption: "Same protection, more obvious method calls. Use this form when the question says accessor and mutator, or when you want the call sites to show that a method is running.",
         },
-        { type: "p", text: "__str__ and __eq__ are dunder methods. They customise built-in operations. __str__ is what print(obj) and str(obj) use, so the object can show a readable sentence instead of <Book object at 0x7f...>. __eq__ is what == uses. Without it, == asks whether the two names refer to the same object in memory. With it, you choose which values count as the same book. Comparing with is still means \"same object\", and __eq__ does not change is." },
+        { type: "p", text: "__str__ and __eq__ are dunder methods. They customise built-in operations. __str__ is what print(obj) and str(obj) use, so the object can show a readable sentence instead of `<Book object at 0x7f...>`. __eq__ is what == uses. Without it, == asks whether the two names refer to the same object in memory. With it, you choose which values count as the same book. Comparing with `is` still means \"same object\", and __eq__ does not change `is`." },
         {
           type: "code",
           title: "Same ISBN means the same book, even in two objects",
@@ -399,9 +399,9 @@ print(book1 == book2)   # True, same ISBN
 print(book1 is book2)   # False, two objects
 print(book1 == book3)   # False
 print(book1 == "1984")  # False, not a Book`,
-          caption: "The isinstance check matters. Without it, comparing a book with a string can raise AttributeError when the method tries to read other.isbn. Returning False is the safe answer for a different type.",
+          caption: "The isinstance check matters. Without it, comparing a book with a string can raise AttributeError when the method tries to read other.isbn. Returning `False` is the safe answer for a different type.",
         },
-        { type: "callout", kind: "exam", label: "Exam watch", text: "== and is are not interchangeable. == uses __eq__ when it exists, so two objects can compare equal by value. is asks whether both names point at one object. A question about object references is almost always an is question. A question about logical equality is an == question." },
+        { type: "callout", kind: "exam", label: "Exam watch", text: "== and `is` are not interchangeable. == uses __eq__ when it exists, so two objects can compare equal by value. `is` asks whether both names point at one object. A question about object references is almost always an `is` question. A question about logical equality is an == question." },
       ],
     },
     {
@@ -413,7 +413,7 @@ print(book1 == "1984")  # False, not a Book`,
       blocks: [
         {
           type: "code",
-          title: "acc2 = acc1 does not open a second account",
+          title: "`acc2 = acc1` does not open a second account",
           source: `class BankAccount:
     def __init__(self, owner, balance):
         self.owner = owner
@@ -428,10 +428,10 @@ print(acc1 is acc2)   # True
 acc2.deposit(200)
 print(acc1.balance)   # 700
 print(acc2.balance)   # 700`,
-          caption: "One call to BankAccount(...), so one object. Two references. The deposit is visible through both names because there is nothing else to see. To give acc2 an independent account, construct another one: acc2 = BankAccount(acc1.owner, acc1.balance). Assignment alone will not do it.",
+          caption: "One call to BankAccount(...), so one object. Two references. The deposit is visible through both names because there is nothing else to see. To give acc2 an independent account, construct another one: `acc2 = BankAccount(acc1.owner, acc1.balance)`. Assignment alone will not do it.",
         },
         { type: "lab", name: "references" },
-        { type: "callout", kind: "note", label: "Remember", text: "Passing an object into a function also passes the reference. A function that calls deposit on its parameter changes the caller's object. Rebinding the parameter, with account = BankAccount(...), does not change the caller's variable. Rebinding a name is local. Mutating the object is shared." },
+        { type: "callout", kind: "note", label: "Remember", text: "Passing an object into a function also passes the reference. A function that calls `deposit` on its parameter changes the caller's object. Rebinding the parameter, with `account = BankAccount(...)`, does not change the caller's variable. Rebinding a name is local. Mutating the object is shared." },
       ],
     },
     {
@@ -451,7 +451,7 @@ print(acc2.balance)   # 700`,
           notes: [
             "Public methods are the interface. The stored values stay private.",
             "A property is one way to expose a value while still validating writes.",
-            "deposit and withdraw are the controlled way to change a balance. Assigning to the attribute is not.",
+            "`deposit` and `withdraw` are the controlled way to change a balance. Assigning to the attribute is not.",
           ],
         },
         {
@@ -461,11 +461,11 @@ print(acc2.balance)   # 700`,
           rows: [
             ["What it is", "A mechanism: data and methods grouped in one class", "A design principle: outsiders see the interface, not the workings"],
             ["What it uses", "The class, and access control such as public and private", "A small public surface, so internal changes do not break callers"],
-            ["Bank account", "owner, balance, deposit and withdraw live in BankAccount", "A caller uses withdraw and never sees how the balance or the interest is stored"],
+            ["Bank account", "`owner`, `balance`, `deposit` and `withdraw` live in BankAccount", "A caller uses `withdraw` and never sees how the balance or the interest is stored"],
           ],
         },
-        { type: "p", text: "Grouping the data with its methods makes maintenance local. If the balance moves from a number to a ledger of transactions, the change stays inside BankAccount, and every caller that already uses deposit and withdraw keeps compiling. Hiding the storage stops other classes from writing a negative balance by accident, and it stops them depending on a detail you may want to replace. Testing is easier because the class can be exercised through its methods without reconstructing the insides of its neighbours. Different people can build different classes at the same time, because each team programs against the other class's methods rather than against its fields." },
-        { type: "p", text: "In the form an exam answer can use: public methods, visibility under control, data not accessible from outside. Python's practical version of that list is a leading underscore for internal attributes, a property when a value must be readable but checked, and methods such as deposit and withdraw for every change of state." },
+        { type: "p", text: "Grouping the data with its methods makes maintenance local. If the balance moves from a number to a ledger of transactions, the change stays inside BankAccount, and every caller that already uses `deposit` and `withdraw` keeps compiling. Hiding the storage stops other classes from writing a negative balance by accident, and it stops them depending on a detail you may want to replace. Testing is easier because the class can be exercised through its methods without reconstructing the insides of its neighbours. Different people can build different classes at the same time, because each team programs against the other class's methods rather than against its fields." },
+        { type: "p", text: "In the form an exam answer can use: public methods, visibility under control, data not accessible from outside. Python's practical version of that list is a leading underscore for internal attributes, a property when a value must be readable but checked, and methods such as `deposit` and `withdraw` for every change of state." },
         {
           type: "code",
           title: "Outside code asks. The account decides.",
@@ -487,7 +487,7 @@ print(acc2.balance)   # 700`,
             self._balance -= amount
             return True
         return False`,
-          caption: "There is a getter and no setter. Reading account.balance is allowed. Writing account.balance = 0 is not, because no setter was defined. A deposit of zero or less is ignored. A withdrawal succeeds only when the amount is positive and covered by the balance.",
+          caption: "There is a getter and no setter. Reading account.balance is allowed. Writing `account.balance = 0` is not, because no setter was defined. A deposit of zero or less is ignored. A withdrawal succeeds only when the amount is positive and covered by the balance.",
         },
         { type: "lab", name: "bank" },
         { type: "callout", kind: "exam", label: "Exam watch", text: "Do not write \"Python attributes starting with an underscore are private, like Java private.\" Say that the underscore is a convention, that __name is mangled to _ClassName__name, and that determined code can still reach the value. Then say why the class offers methods anyway: so the rules live in one place." },
@@ -507,7 +507,7 @@ print(acc2.balance)   # 700`,
       why: "The class is the plan. The object is the instance built from it, and that is the one that occupies memory and stores data. A getter is a method. A second name is a reference.",
     },
     {
-      q: "A program creates two Bike objects and then calls accelerate on the first one. Which statement is correct?",
+      q: "A program creates two Bike objects and then calls `accelerate` on the first one. Which statement is correct?",
       options: [
         "Both bikes speed up, because speed is shared class data",
         "Only the first bike's speed changes, and Bike.count stays the same",
@@ -515,13 +515,13 @@ print(acc2.balance)   # 700`,
         "The second bike is destroyed, because it was not used",
       ],
       answer: 1,
-      why: "speed is an instance attribute, so accelerate writes to one object. count changes when a bike is constructed, not when one is accelerated.",
+      why: "speed is an instance attribute, so `accelerate` writes to one object. count changes when a bike is constructed, not when one is accelerated.",
     },
     {
-      q: "acc1 = BankAccount(\"Alice\", 500) and then acc2 = acc1. After acc2.deposit(200), what is acc1.balance?",
+      q: "`acc1 = BankAccount(\"Alice\", 500)` and then `acc2 = acc1`. After `acc2.deposit(200)`, what is `acc1.balance`?",
       options: ["500", "200", "700", "It raises an error, because acc1 was not used"],
       answer: 2,
-      why: "The assignment copies the reference. There is still one account, so the deposit is visible through both names. acc1 is acc2 is True.",
+      why: "The assignment copies the reference. There is still one account, so the deposit is visible through both names. `acc1 is acc2` is `True`.",
     },
     {
       q: "Which pair is the best distinction?",
@@ -535,7 +535,7 @@ print(acc2.balance)   # 700`,
       why: "Encapsulation is the grouping, and it is possible in Python. Information hiding is the decision to expose an interface and conceal the storage and the rules. Access modifiers are one tool for the second idea, not the whole idea.",
     },
     {
-      q: "A balance property raises ValueError when the new value is negative. The account currently holds 100. What does account.balance = -50 do?",
+      q: "A balance property raises ValueError when the new value is negative. The account currently holds 100. What does `account.balance = -50` do?",
       options: [
         "Stores −50, because assignment never calls a method",
         "Stores 0 instead, as a default",
@@ -546,7 +546,7 @@ print(acc2.balance)   # 700`,
       why: "Assignment to a property calls the setter. The setter rejects the value before writing _balance, so the old state survives.",
     },
     {
-      q: "Two Book objects have the same ISBN and __eq__ compares ISBNs. book1 == book2 and book1 is book2. What are the two results?",
+      q: "Two Book objects have the same ISBN and __eq__ compares ISBNs. `book1 == book2` and `book1 is book2`. What are the two results?",
       options: [
         "True and True",
         "False and False",
@@ -554,7 +554,7 @@ print(acc2.balance)   # 700`,
         "False and True",
       ],
       answer: 2,
-      why: "== follows __eq__, so the ISBN match makes it True. is asks whether both names point at the same object. They were constructed separately, so is is False.",
+      why: "== follows __eq__, so the ISBN match makes it `True`. `is` asks whether both names point at the same object. They were constructed separately, so `is` is `False`.",
     },
   ],
   checks: [
@@ -565,8 +565,8 @@ print(acc2.balance)   # 700`,
     "Distinguish an instance attribute from a class attribute, and an instance method from a class method and a static method.",
     "Write a class, instantiate two objects, and explain why __init__ is an initialiser.",
     "Protect a value with a property or with get_ and set_ methods, and say what the setter rejects.",
-    "Explain what __str__ changes and what __eq__ changes, and how == differs from is.",
+    "Explain what __str__ changes and what __eq__ changes, and how == differs from `is`.",
     "Predict what happens when a second variable is assigned an existing object and a method then mutates it.",
-    "Distinguish encapsulation from information hiding, and explain Python's _, __ and name mangling.",
+    "Distinguish encapsulation from information hiding, and explain Python's `_`, `__` and name mangling.",
   ],
 };
