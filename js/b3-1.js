@@ -448,7 +448,6 @@ print(acc2.balance)   # 700`,
             "Define encapsulation and information hiding in your own words.",
             "Use Python's conventions (`_name`, `__name`, `@property`) to protect an object's internals.",
             "Explain why private fields alone do not guarantee information hiding.",
-            "Spot common ways internal details leak out of a class.",
           ],
         },
         { type: "h3", text: "Encapsulation" },
@@ -679,62 +678,6 @@ print(is_empty(s))   # False`,
           caption: "The calls are gathered under the module so this paste runs. In two files, main.py would be `import stack`, then `stack.new()`, `stack.push(s, 1)`, `stack.push(s, 2)`, and `stack.pop(s)`. The handle `s` is only an int.",
         },
         { type: "p", text: "You could rewrite stack.py to use a linked list of tuples and main.py would keep working. This is the same pattern C's FILE* uses. (A Python module is a loose kind of bundling itself, so this is \"without encapsulation\" in the class-and-access-control sense.)" },
-        { type: "h3", text: "Common leaks" },
-        { type: "p", text: "A class can mark every field with an underscore and still leak its internals. Watch for these three patterns." },
-        { type: "h3", text: "1. Returning a mutable internal object" },
-        {
-          type: "code",
-          title: "Leak 1: the caller is handed the real list",
-          source: `class Course:
-    def __init__(self):
-        self._students = []
-
-    def enroll(self, name):
-        if len(self._students) >= 30:
-            raise ValueError("Course is full")
-        self._students.append(name)
-
-    def students(self):
-        return self._students
-
-c = Course()
-c.students().extend(["x"] * 100)
-try:
-    c.enroll("Mei")
-except ValueError as error:
-    print(error)                 # Course is full
-print(len(c.students()))        # 100`,
-          caption: "`extend` bypasses the 30-student rule, so `enroll(\"Mei\")` then reports that the course is full. The length is 100.",
-        },
-        { type: "p", text: "Fix: return a copy or an immutable view, such as `return tuple(self._students)` or `return list(self._students)`." },
-        { type: "p", text: "The same leak, with a dictionary. `items()` returns the real mapping, so a caller can ignore `add`." },
-        {
-          type: "code",
-          title: "The same leak, with a dictionary",
-          source: `class Inventory:
-    def __init__(self):
-        self._items = {}
-
-    def add(self, name, qty):
-        if qty <= 0:
-            raise ValueError("Quantity must be positive")
-        self._items[name] = self._items.get(name, 0) + qty
-
-    def items(self):
-        return self._items
-
-inv = Inventory()
-inv.add("pen", 10)
-inv.items()["pen"] = -5
-print(inv.items()["pen"])   # -5, add() was bypassed`,
-          caption: "`add` refuses a quantity that is not positive. Writing through the returned dictionary stores −5 anyway. Return `dict(self._items)` if the caller only needs to look.",
-        },
-        { type: "h3", text: "2. Naming methods after the implementation" },
-        { type: "p", text: "A method like `get_student_dict()` promises that a dictionary exists. Name methods after what the caller wants, such as `find_student(name)`. Then the storage can change." },
-        { type: "h3", text: "3. Exposing a library's or database's types" },
-        { type: "p", text: "If your `UserRepository.find()` returns a raw database row object, every caller now depends on that database library. Return your own simple type, such as a `User` dataclass, so the database can be swapped." },
-        { type: "h3", text: "A quick test" },
-        { type: "p", text: "Ask: \"If I changed how this works inside, how many other files would I need to edit?\" If the answer is more than zero, something is leaking." },
         {
           type: "table",
           title: "Encapsulation and information hiding",
@@ -748,7 +691,7 @@ print(inv.items()["pen"])   # -5, add() was bypassed`,
           ],
         },
         { type: "p", text: "In good code the two usually work together: encapsulation gives you the walls, and information hiding decides where to put them." },
-        { type: "callout", kind: "exam", label: "Exam watch", text: "Do not stop at \"the attributes are private.\" Say what is bundled, which decision is hidden, and what a caller can still depend on. A getter and setter that expose Fahrenheit, or a method that returns the real list, is the case the table calls encapsulation without information hiding." },
+        { type: "callout", kind: "exam", label: "Exam watch", text: "Do not stop at \"the attributes are private.\" Say what is bundled, which decision is hidden, and what a caller can still depend on. A getter and setter that expose Fahrenheit is the case the table calls encapsulation without information hiding." },
       ],
     },
   ],
@@ -826,6 +769,6 @@ print(inv.items()["pen"])   # -5, add() was bypassed`,
     "Explain what __str__ changes and what __eq__ changes, and how == differs from `is`.",
     "Predict what happens when a second variable is assigned an existing object and a method then mutates it.",
     "Distinguish encapsulation from information hiding, and explain Python's `_`, `__` and name mangling.",
-    "Give one case of encapsulation without information hiding, and spot a method that leaks a mutable internal object.",
+    "Give one case of encapsulation without information hiding.",
   ],
 };
