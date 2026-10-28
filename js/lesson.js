@@ -629,7 +629,7 @@ const labs = {
   },
 
   bank(spec) {
-    return labFrame(spec.title || "The account protects its balance", spec.lede || "Outside code can read the balance and call deposit or withdraw. It cannot set a negative balance, and a withdrawal larger than the balance is refused.", (box) => {
+    return labFrame(spec.title || "The account protects its balance", spec.lede || "Outside code reads `balance` and calls `deposit` or `withdraw`. A deposit that is not positive, and a withdrawal the balance cannot cover, are refused. Assigning to `balance` fails, because the property has no setter.", (box) => {
       let balance = 100;
       const amount = el("input");
       amount.type = "number";
@@ -650,7 +650,7 @@ const labs = {
       const actions = el("div", "row-actions");
       actions.append(button("deposit", () => {
         const money = value();
-        if (!(money > 0)) paint("`deposit` refuses a value that is not positive. State unchanged.", false);
+        if (!(money > 0)) paint("`deposit` raises ValueError: Deposit must be positive. `_balance` stays unchanged.", false);
         else {
           balance += money;
           paint(`Deposited ${money}. The method updated _balance.`);
@@ -658,14 +658,14 @@ const labs = {
       }));
       actions.append(button("withdraw", () => {
         const money = value();
-        if (!(money > 0 && money <= balance)) paint("`withdraw` returns `False`. The amount must be positive and no more than the balance.", false);
+        if (!(money > 0 && money <= balance)) paint("`withdraw` raises ValueError: Insufficient funds. `_balance` stays unchanged.", false);
         else {
           balance -= money;
-          paint(`Withdrew ${money}. \`withdraw\` returns \`True\`.`);
+          paint(`Withdrew ${money}. \`withdraw\` updated \`_balance\`.`);
         }
       }, "btn small ghost"));
-      actions.append(button("Set balance to −50", () => {
-        paint("The setter raises ValueError: balance cannot be negative. _balance is unchanged.", false);
+      actions.append(button("Assign balance = 1000", () => {
+        paint("Assignment raises AttributeError. `balance` has no setter, so `_balance` stays unchanged.", false);
       }, "btn small ghost"));
       box.append(label, status, actions, feedback);
       paint("Alice's account starts at 100.", true);

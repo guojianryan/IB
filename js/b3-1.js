@@ -11,7 +11,7 @@ export const topic = {
     ["#design", "B3.1.2", "Design a class", "One responsibility, the data, the actions, and a UML class diagram."],
     ["#static", "B3.1.3", "Static and non-static", "Instance data versus class data, and instance, class and static methods."],
     ["#classes", "B3.1.4", "Write the class, make the object", "class, a call that instantiates, and __init__ setting the starting state."],
-    ["#encapsulation", "B3.1.5", "Encapsulation and information hiding", "Keep the data with the methods, and do not let outside code edit it freely."],
+    ["#encapsulation", "B3.1.5", "Encapsulation and information hiding", "Protect the invariant, and hide the decision that is likely to change."],
   ],
   sections: [
     {
@@ -439,58 +439,279 @@ print(acc2.balance)   # 700`,
       nav: "Encapsulation",
       kicker: "B3.1.5 · Encapsulation and information hiding",
       title: "Wrap the data, and hide the mechanism",
-      lede: "Encapsulation and information hiding travel together, but they are not the same claim. One is about grouping. The other is about what outsiders are allowed to see.",
+      lede: "Encapsulation and information hiding both let code change without breaking, and they are not the same claim. Encapsulation is the mechanism: data and the code that works on it live in one unit. Information hiding is the goal: a decision that is likely to change stays behind a stable interface.",
       blocks: [
         {
           type: "pair",
           able: [
             "Define both terms and use them for a class you have written.",
-            "Apply public and private, including Python's underscore conventions.",
-            "Explain why limiting access protects the object's state.",
+            "Explain why a private field, on its own, does not hide a design decision.",
+            "Spot a leak: a mutable internal object, a method named after the storage, or a raw library type.",
           ],
           notes: [
-            "Public methods are the interface. The stored values stay private.",
-            "A property is one way to expose a value while still validating writes.",
-            "`deposit` and `withdraw` are the controlled way to change a balance. Assigning to the attribute is not.",
+            "Encapsulation protects an invariant, a rule the object must always obey.",
+            "Information hiding protects a decision, such as a data format, an algorithm, or a storage choice.",
+            "The question is not only \"which fields are private?\" It is \"what could change here, and who would have to know?\"",
           ],
         },
-        {
-          type: "table",
-          title: "Two ideas that get marked as if they were one",
-          head: ["", "Encapsulation", "Information hiding"],
-          rows: [
-            ["What it is", "A mechanism: data and methods grouped in one class", "A design principle: outsiders see the interface, not the workings"],
-            ["What it uses", "The class, and access control such as public and private", "A small public surface, so internal changes do not break callers"],
-            ["Bank account", "`owner`, `balance`, `deposit` and `withdraw` live in BankAccount", "A caller uses `withdraw` and never sees how the balance or the interest is stored"],
-          ],
-        },
-        { type: "p", text: "Grouping the data with its methods makes maintenance local. If the balance moves from a number to a ledger of transactions, the change stays inside BankAccount, and every caller that already uses `deposit` and `withdraw` keeps compiling. Hiding the storage stops other classes from writing a negative balance by accident, and it stops them depending on a detail you may want to replace. Testing is easier because the class can be exercised through its methods without reconstructing the insides of its neighbours. Different people can build different classes at the same time, because each team programs against the other class's methods rather than against its fields." },
-        { type: "p", text: "In the form an exam answer can use: public methods, visibility under control, data not accessible from outside. Python's practical version of that list is a leading underscore for internal attributes, a property when a value must be readable but checked, and methods such as `deposit` and `withdraw` for every change of state." },
+        { type: "p", text: "Without encapsulation, the data is a plain value any code can edit. Nothing in this dictionary can defend the rule that a balance stays at least 0." },
         {
           type: "code",
-          title: "Outside code asks. The account decides.",
+          title: "A dictionary has no invariant",
+          source: `account = {"owner": "Mei", "balance": 100}
+account["balance"] -= 500   # nothing prevents this
+print(account["balance"])   # -400: the rule "balance >= 0" is broken`,
+          caption: "Any line in the program can reach into the dictionary. The rule lives nowhere, so it is enforced nowhere.",
+        },
+        { type: "p", text: "The class below puts the data and the rule in one place. Outside code changes the balance only through `deposit` and `withdraw`, and it can read `balance` but not assign to it." },
+        {
+          type: "code",
+          title: "The account refuses to break its own rule",
           source: `class BankAccount:
-    def __init__(self, owner: str, balance: float):
+    def __init__(self, owner, balance=0):
+        if balance < 0:
+            raise ValueError("Opening balance cannot be negative")
         self.owner = owner
         self._balance = balance
 
+    def deposit(self, amount):
+        if amount <= 0:
+            raise ValueError("Deposit must be positive")
+        self._balance += amount
+
+    def withdraw(self, amount):
+        if amount > self._balance:
+            raise ValueError("Insufficient funds")
+        self._balance -= amount
+
     @property
-    def balance(self) -> float:
+    def balance(self):
         return self._balance
 
-    def deposit(self, amount: float) -> None:
-        if amount > 0:
-            self._balance += amount
+acc = BankAccount("Mei", 100)
+acc.withdraw(30)
+print(acc.balance)          # 70
+try:
+    acc.withdraw(500)
+except ValueError as error:
+    print(error)            # Insufficient funds
+try:
+    acc.balance = 1000
+except AttributeError as error:
+    print(type(error).__name__)  # AttributeError: no setter`,
+          caption: "withdraw(30) is a legal change, so the balance becomes 70. withdraw(500) raises ValueError and leaves 70 in place. acc.balance = 1000 raises AttributeError because the property has no setter. The leading underscore marks _balance as internal; B3.1.1 already showed that this is a convention, not a lock.",
+        },
+        { type: "p", text: "A property is how Python lets you add a rule later without changing the call sites. Callers keep writing `s.age`. The `get_` and `set_` form, in the methods section, is what a question written in Java vocabulary often expects. The property is the same idea with the call looking like an attribute." },
+        {
+          type: "code",
+          title: "Start with an attribute. Add the rule without changing the caller.",
+          source: `class Student:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
 
-    def withdraw(self, amount: float) -> bool:
-        if 0 < amount <= self._balance:
-            self._balance -= amount
-            return True
-        return False`,
-          caption: "There is a getter and no setter. Reading account.balance is allowed. Writing `account.balance = 0` is not, because no setter was defined. A deposit of zero or less is ignored. A withdrawal succeeds only when the amount is positive and covered by the balance.",
+    @property
+    def age(self):
+        return self._age
+
+    @age.setter
+    def age(self, value):
+        if not 0 < value < 150:
+            raise ValueError("Age must be between 1 and 149")
+        self._age = value
+
+s = Student("Ali", 20)
+s.age = 21
+print(s.age)    # 21
+try:
+    s.age = -5
+except ValueError as error:
+    print(error)  # Age must be between 1 and 149`,
+          caption: "self.age = age inside __init__ already goes through the setter, so Student(\"Ali\", -5) fails at construction. From outside, s.age = 21 still looks like an assignment.",
         },
         { type: "lab", name: "bank" },
-        { type: "callout", kind: "exam", label: "Exam watch", text: "Do not write \"Python attributes starting with an underscore are private, like Java private.\" Say that the underscore is a convention, that __name is mangled to _ClassName__name, and that determined code can still reach the value. Then say why the class offers methods anyway: so the rules live in one place." },
+        { type: "p", text: "Information hiding means each module keeps a design decision secret, so that changing the decision affects only that module. David Parnas set the idea down in 1972: split a program around the decisions most likely to change, such as data formats, algorithms, and storage. A gradebook's decision is how scores are stored. The interface stays small: `add_score`, `average`, `top_student`." },
+        {
+          type: "code",
+          title: "Version 1: every score is kept in a list",
+          source: `class Gradebook:
+    def __init__(self):
+        self._scores = {}
+
+    def add_score(self, name, score):
+        self._scores.setdefault(name, []).append(score)
+
+    def average(self, name):
+        scores = self._scores[name]
+        return sum(scores) / len(scores)
+
+    def top_student(self):
+        return max(self._scores, key=self.average)
+
+gb = Gradebook()
+gb.add_score("Mei", 90)
+gb.add_score("Mei", 80)
+gb.add_score("Ali", 95)
+print(gb.average("Mei"))   # 85.0
+print(gb.top_student())    # Ali`,
+          caption: "The caller never sees the list. That is the whole of the secret. _scores could be replaced, and these four calls would not notice.",
+        },
+        {
+          type: "code",
+          title: "Version 2: a running total, and the same caller",
+          source: `class Gradebook:
+    def __init__(self):
+        self._totals = {}
+
+    def add_score(self, name, score):
+        entry = self._totals.setdefault(name, [0, 0])
+        entry[0] += score
+        entry[1] += 1
+
+    def average(self, name):
+        total, count = self._totals[name]
+        return total / count
+
+    def top_student(self):
+        return max(self._totals, key=self.average)
+
+gb = Gradebook()
+gb.add_score("Mei", 90)
+gb.add_score("Mei", 80)
+gb.add_score("Ali", 95)
+print(gb.average("Mei"))   # 85.0
+print(gb.top_student())    # Ali`,
+          caption: "Millions of scores would make version 1 slow, because average walks the whole list. Version 2 keeps a total and a count. The calls are character for character the same, which is only possible because no caller ever saw the list.",
+        },
+        { type: "p", text: "You can encapsulate without hiding anything, and you can hide a decision without a class. The two thermometers make the first case. Both bundle data with methods. Only the second one keeps a decision secret." },
+        {
+          type: "code",
+          title: "Encapsulated, but the decision leaks",
+          source: `class Thermometer:
+    def __init__(self):
+        self._fahrenheit = 32.0
+
+    def get_fahrenheit(self):
+        return self._fahrenheit
+
+    def set_fahrenheit(self, value):
+        self._fahrenheit = value
+
+room = Thermometer()
+room.set_fahrenheit(212)
+print(room.get_fahrenheit())  # 212`,
+          caption: "The field is marked internal, and every read or write goes through a method. Callers still depend on Fahrenheit. Switching the stored unit to Celsius would break every one of them. The data is encapsulated. The decision is not hidden.",
+        },
+        {
+          type: "code",
+          title: "The same object, described by what the caller wants",
+          source: `class Thermometer:
+    def __init__(self, celsius=0.0):
+        self._kelvin = celsius + 273.15
+
+    def celsius(self):
+        return self._kelvin - 273.15
+
+    def fahrenheit(self):
+        return self.celsius() * 9 / 5 + 32
+
+room = Thermometer(100)
+print(room.celsius())      # 100.0
+print(room.fahrenheit())   # 212.0`,
+          caption: "The secret is that the stored unit is kelvin. Callers ask for a scale by name. The storage can change, and celsius() and fahrenheit() stay the interface.",
+        },
+        { type: "p", text: "The other way round needs no class. Callers receive an opaque handle, here a plain integer, and pass it to functions. Nothing is bundled into an object, and nothing is enforced, yet main.py cannot see how a stack is stored. You could rewrite the storage as a linked list of tuples and the caller would keep working. C's FILE* is the same pattern. A Python module is a loose sort of bundling, so \"without encapsulation\" here means without a class and without access control." },
+        {
+          type: "code",
+          title: "stack.py keeps the storage. main.py sees an int.",
+          source: `# stack.py
+_stacks = {}
+_next_id = 0
+
+def new():
+    global _next_id
+    _next_id += 1
+    _stacks[_next_id] = []
+    return _next_id
+
+def push(handle, item):
+    _stacks[handle].append(item)
+
+def pop(handle):
+    return _stacks[handle].pop()
+
+def is_empty(handle):
+    return not _stacks[handle]
+
+# main.py — only the integer handle crosses this line
+s = new()
+push(s, 1)
+push(s, 2)
+print(pop(s))        # 2
+print(is_empty(s))   # False`,
+          caption: "The handle s is only an int. main.py never mentions _stacks. In two real files the caller would be import stack, then stack.new(), stack.push(s, 1), stack.push(s, 2), stack.pop(s). The calls are gathered here so the example runs as one paste.",
+        },
+        {
+          type: "table",
+          title: "The distinction, in the form an answer can use",
+          head: ["", "Encapsulation", "Information hiding"],
+          rows: [
+            ["What it is", "A language mechanism", "A design principle"],
+            ["Core idea", "Bundle data with its methods, and control access", "Keep a changeable decision behind a stable interface"],
+            ["Main benefit", "Protects an invariant, such as a balance that cannot go negative", "Limits how far a change spreads"],
+            ["Python tools", "A class, _name, __name, and @property", "A small interface, an opaque handle, returning a copy"],
+            ["Can exist alone?", "Yes: getters and setters that expose the whole representation", "Yes: functions that pass around an opaque handle"],
+          ],
+        },
+        { type: "p", text: "A class can mark every field with an underscore and still leak. Three patterns are worth spotting. The test for all three is the same: if the inside changed, how many other files would you have to edit? More than zero means something has leaked." },
+        {
+          type: "code",
+          title: "Leak 1: the caller is handed the real list",
+          source: `class Course:
+    def __init__(self):
+        self._students = []
+
+    def enroll(self, name):
+        if len(self._students) >= 30:
+            raise ValueError("Course is full")
+        self._students.append(name)
+
+    def students(self):
+        return self._students
+
+c = Course()
+c.students().extend(["x"] * 100)
+try:
+    c.enroll("Mei")
+except ValueError as error:
+    print(error)                 # Course is full
+print(len(c.students()))        # 100`,
+          caption: "`students()` returns the actual list, so `extend` bypasses the 30-student rule and then `enroll` sees a full course that nobody enrolled in. Return a copy, `list(self._students)` or `tuple(self._students)`, and the caller can read the names without editing the class's list.",
+        },
+        {
+          type: "code",
+          title: "The same leak, with a dictionary",
+          source: `class Inventory:
+    def __init__(self):
+        self._items = {}
+
+    def add(self, name, qty):
+        if qty <= 0:
+            raise ValueError("Quantity must be positive")
+        self._items[name] = self._items.get(name, 0) + qty
+
+    def items(self):
+        return self._items
+
+inv = Inventory()
+inv.add("pen", 10)
+inv.items()["pen"] = -5
+print(inv.items()["pen"])   # -5, add() was bypassed`,
+          caption: "`add` refuses a quantity that is not positive. `items()` then gives away the real dictionary, so a caller can store −5 anyway. Return a copy, `dict(self._items)`, if the caller only needs to look.",
+        },
+        { type: "p", text: "The second leak is a method named after the storage. `get_student_dict()` promises that a dictionary exists. Name the method after what the caller wants, such as `find_student(name)`, and the storage can change. The third leak is returning another library's type. If `UserRepository.find()` returns a raw database row, every caller now depends on that database library. Return your own simple type, such as a `User` dataclass, and the database can be swapped." },
+        { type: "p", text: "In good code the two ideas work together. Encapsulation gives you the walls. Information hiding decides where to put them." },
+        { type: "callout", kind: "exam", label: "Exam watch", text: "Do not stop at \"the attributes are private.\" A private field with a getter and setter that expose the real representation, like the Fahrenheit thermometer, is encapsulation without information hiding. A method that returns the real list, like students() or items(), breaks the invariant the class thought it was protecting. Say what is bundled, what decision is hidden, and what a caller is still able to depend on." },
       ],
     },
   ],
@@ -568,5 +789,6 @@ print(acc2.balance)   # 700`,
     "Explain what __str__ changes and what __eq__ changes, and how == differs from `is`.",
     "Predict what happens when a second variable is assigned an existing object and a method then mutates it.",
     "Distinguish encapsulation from information hiding, and explain Python's `_`, `__` and name mangling.",
+    "Give one case of encapsulation without information hiding, and spot a method that leaks a mutable internal object.",
   ],
 };
