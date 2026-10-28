@@ -160,9 +160,9 @@ except AttributeError:
             "Override the dunder methods that make a custom object work with print, len and ==.",
           ],
           notes: [
-            "Dynamic polymorphism in Python is method overriding. The object decides at run time.",
-            "Static polymorphism, in Java, is method overloading. The compiler decides from the arguments.",
-            "Python does not pick a method from its signature at compile time. A second def with the same name replaces the first.",
+            "Dynamic polymorphism is method overriding. The object decides at run time, which costs a lookup.",
+            "Static polymorphism is method overloading. The compiler decides from the number and types of the arguments.",
+            "Because that decision is made at compile time, the running program does not spend time searching for the method, and the compiler can optimise the call.",
           ],
         },
         { type: "p", text: "A Chihuahua, a golden retriever and a German shepherd are all dogs. \"Fetch\" is one command. The small dog runs and comes back, the retriever commits to it, a stubborn dog takes its time. Same request, different behaviour, and the person calling does not write a separate instruction for each breed. That is the idea: client code depends on what the object can do, not on its exact class." },
@@ -261,7 +261,7 @@ print(len(cart1))    # 2
 print(cart1 == cart2)  # True, same owner, even though the carts hold different items`,
           caption: "__str__ is for people reading output. __repr__ is the unambiguous form, useful in a debugger. __len__ is what len(cart) calls. __eq__ overloads ==. This cart treats two carts as equal when the owners match, which is a deliberate rule, not a general fact about equality. Another design would compare the items.",
         },
-        { type: "p", text: "Static polymorphism is the other form named in the syllabus. In Java it usually means overloading: several methods share a name and differ in the number or type of their parameters. The compiler chooses the method when the program is compiled, from the arguments written at the call. There is no search at run time, and the compiler is free to inline the call. One name covers several related operations, and the caller does not invent add_ints and add_doubles." },
+        { type: "p", text: "Static polymorphism is the other form. In Java it is method overloading: several methods share a name and differ in the number or the types of their parameters. True static polymorphism decides which method runs at compile time, from the arguments written at the call, rather than by resolving the call while the program is running." },
         {
           type: "code",
           lang: "Java",
@@ -282,27 +282,18 @@ Calculator calc = new Calculator();
 calc.add(2, 3);        // add(int, int)
 calc.add(2.5, 3.5);    // add(double, double)
 calc.add(1, 2, 3);     // add(int, int, int)`,
-          caption: "Three methods, one name. The choice is fixed before the program runs, which is why this is called static or compile-time polymorphism. Python will not do this.",
+          caption: "The compiler can tell which add to invoke from the number and types of the arguments. add(2, 3) is the int version, add(2.5, 3.5) is the double version, and add(1, 2, 3) is the three-int version. The binding is done at compile time, which is why this is called static polymorphism.",
         },
+        { type: "p", text: "That compile-time choice is also why static polymorphism can maximise code efficiency, especially next to dynamic polymorphism. Dynamic polymorphism spends extra time at run time determining which implementation to call. That lookup is the runtime overhead. Static polymorphism does the resolution before the program runs, so the overhead disappears, and the compiler can apply optimisations that are only possible once the exact method is known." },
         {
-          type: "code",
-          title: "In Python the second definition replaces the first",
-          source: `class Calculator:
-    def add(self, a, b):
-        return a + b
-
-    def add(self, a, b, c):
-        return a + b + c
-
-calc = Calculator()
-print(calc.add(1, 2, 3))  # 6
-try:
-    print(calc.add(2, 3))
-except TypeError as error:
-    print(type(error).__name__)  # TypeError: the two-argument add is gone`,
-          caption: "There is only one add left on the class, the three-argument version. Default arguments, or a class method with a different name, are the Python tools when you want more than one way to call. They are not compile-time overloading, and an exam answer should not claim that they are.",
+          type: "list",
+          items: [
+            "Readability: one function name covers operations that are conceptually the same, instead of a different name for each version.",
+            "Ease of use: the compiler selects the version from the argument types, so the caller does not have to remember separate names.",
+            "Organisation: the related operations stay under one identifier, which keeps the class less cluttered.",
+          ],
         },
-        { type: "callout", kind: "exam", label: "Exam watch", text: "Use the two binding times as the distinction. Overriding: same signature, subclass body, chosen from the object at run time. Overloading: same name, different parameters, chosen from the arguments at compile time. Python does the first. The second is the Java form of the syllabus point." },
+        { type: "callout", kind: "exam", label: "Exam watch", text: "Overriding is dynamic: the same signature, a subclass body, chosen from the actual object at run time, with a lookup to pay for. Overloading is static: the same name, different parameters, chosen from the arguments at compile time. The efficiency claim belongs to the second one, because the search has already happened before the program runs." },
       ],
     },
     {
@@ -724,15 +715,15 @@ station.set_temperature(18)  # the phone no longer prints`,
       why: "Circle.area overrides Shape.area. The function was written against Shape, and the body that runs is chosen when the call happens, from the object that was passed. Adding a subclass does not mean editing print_area.",
     },
     {
-      q: "A Python class defines add(self, a, b) and then add(self, a, b, c). What does calc.add(2, 3) do?",
+      q: "In the Java Calculator, add(2, 3), add(2.5, 3.5) and add(1, 2, 3) each run a different method. Why is this static polymorphism, and why can it be more efficient than overriding?",
       options: [
-        "Runs the two-argument version, as in Java overloading",
-        "Runs both versions and returns two results",
-        "Raises TypeError, because the second definition replaced the first",
-        "Returns 5, using default values for the missing argument",
+        "The method is chosen from the object at run time, so each call searches for an implementation",
+        "The compiler chooses the method from the number and types of the arguments, so the running program does no lookup",
+        "All three calls run the same method body",
+        "Static polymorphism means the method was declared with the keyword static",
       ],
-      answer: 2,
-      why: "Python keeps one function per name on the class. The later def wins. There is no compile-time selection by signature. Overloading of that kind is the Java example, not this one.",
+      answer: 1,
+      why: "Binding happens at compile time. That removes the extra lookup dynamic polymorphism spends deciding which implementation to call, and it lets the compiler optimise the call. One name still covers the related operations.",
     },
     {
       q: "PaymentMethod is an abstract base class with an abstract pay method. Which call succeeds?",
@@ -773,7 +764,7 @@ station.set_temperature(18)  # the phone no longer prints`,
     "State, for public, protected, default and private, whether a subclass may use the member.",
     "Explain Python's version: plain names, _names, and __names mangled with the class name.",
     "Write a polymorphic call that works for two subclasses, and say when the method body is chosen.",
-    "Distinguish overriding from overloading, and say which of them Python does not provide.",
+    "Distinguish overriding from overloading, and explain why static polymorphism can be more efficient.",
     "Say what __str__, __repr__, __len__ and __eq__ are for.",
     "Explain why an abstract class cannot be instantiated, and what a subclass must do.",
     "Choose aggregation or composition for a new pair of classes, and draw the right diamond on the whole.",
