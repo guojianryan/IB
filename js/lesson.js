@@ -246,7 +246,10 @@ function codeBlock(spec) {
   bar.append(el("span", "marks", spec.lang || "Python"));
   if (spec.title) bar.append(el("span", "", spec.title));
   box.append(bar);
-  box.append(highlight(spec.source, (spec.lang || "Python").toLowerCase()));
+  const scroller = el("div", "code-scroll");
+  scroller.tabIndex = 0;
+  scroller.append(highlight(spec.source, (spec.lang || "Python").toLowerCase()));
+  box.append(scroller);
   if (spec.caption) box.append(el("figcaption", "", spec.caption));
   return box;
 }

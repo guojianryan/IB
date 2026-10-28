@@ -801,7 +801,26 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
   margin-top: 8px;
 }
 
-.code-figure .pseudo { margin-top: 0; }
+.code-scroll {
+  max-height: 24rem;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #0b0e15;
+  scrollbar-color: rgba(237, 241, 247, 0.35) transparent;
+}
+
+.code-scroll:focus-visible { outline-offset: 3px; }
+
+.code-figure .pseudo {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+  width: max-content;
+  min-width: 100%;
+}
 
 .classbox-wrap { margin-top: 12px; }
 
@@ -897,6 +916,7 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
   .tabpanel.is-hidden { display: block !important; }
   .tabbar { display: none; }
   .pseudo, .pseudo span { color: black; background: white; font-style: normal; }
+  .code-scroll { max-height: none; overflow: visible; background: white; }
   .uml-svg .uml-box, .uml-svg .uml-head, .classbox { fill: white; background: white; stroke: black; }
   .uml-svg text, .uml-svg .uml-stereo, .uml-svg .rel-label { fill: black; }
   .uml-svg .rel, .uml-svg .uml-line { stroke: black; }
