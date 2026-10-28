@@ -34,18 +34,21 @@ export const topic = {
             "Inheritance and polymorphism are defined here. The code that builds them is HL, in B3.2.",
           ],
         },
-        { type: "p", text: "A class is a blueprint. It says what data each object will store and what actions each object will be able to perform. Writing a class is like drawing the plan of a house: you cannot live in the plan. An object is one house built from that plan. It occupies memory and holds real values. From one User class you can make user1 for Alice and user2 for Bob. Those are two objects, two lots of state, same methods." },
-        { type: "p", text: "An attribute is a stored value. An instance attribute belongs to one object and is reached through self. A class attribute belongs to the class and is shared by every object. A method is a named block of code, attached to the class, that can take parameters. An instance method is called on one object and receives that object as self, so it can see both that object's data and the shared class data. A class method belongs to the class, is marked with @classmethod, receives cls instead of self, and can be called without an object." },
+        { type: "h3", text: "Key OOP concepts" },
         {
-          type: "columns",
+          type: "list",
           items: [
-            { title: "Encapsulation", text: "The data and the methods that use it live in one class. Outside code reaches the data through methods such as accessors and mutators, not by poking around in the storage." },
-            { title: "Inheritance", text: "An is-a relationship. A subclass reuses the attributes and methods of a superclass and can add its own. A Teacher is a Person. The full mechanism is B3.2.1." },
-            { title: "Polymorphism", text: "One name, more than one behaviour. Subclasses can override a method so each object responds in its own way. The notes also distinguish overloading from overriding. The code is B3.2.2." },
+            "Class: a class is a blueprint, template, or recipe used to create objects. It defines the structure (what attributes it will have) and the behaviour (what methods it can run), but it does not contain real data on its own. Writing a class is like drawing the architectural blueprint for a house. You cannot live inside the blueprint itself, but you use it to build actual houses.",
+            "Object: an object is a concrete instance of a class created from its blueprint. It is a real entity that occupies space in the computer's memory and holds actual data. If the class is the blueprint of a house, the object is the physical house built on a specific street. From one class blueprint you can instantiate as many unique objects as you need. For example, user1 for Alice and user2 for Bob are both objects of the User class. An object is an abstract entity that consists of state (attributes) and related behaviour (methods). An object stores its state in fields and exposes its behaviour through methods.",
+            "Attribute: attributes of a class in Python are the data stored inside a class or its objects. They represent the state of either the class itself or each instance created from it. There are two types of attributes, instance attributes and class attributes. Instance attributes belong to each object. They are accessed through `self`. Class attributes belong to the class itself, shared by all instances.",
+            "Method: a method is a collection of code that can be identified by its name and accessed at any point in a program by simply using its name. Methods can accept input values, known as parameters. An instance method can be called on an instance of a class, and has access to both instance variables (unique to each instance) and class variables (shared across all instances of the class). In Python, it always has `self` as the first parameter. A class method belongs to the class itself, not to any individual instance. It works with class-level data and can be called without creating an object. In Python, it uses the `@classmethod` decorator and `cls` instead of `self`.",
+            "Encapsulation: encapsulation conceals the implementation details of data within a class and provides access to that data from outside the class only through methods such as accessor or mutator methods. The mechanism is built out in B3.1.5.",
+            "Inheritance: inheritance models an is-a relationship. A class (the child, or subclass) can inherit attributes and methods from another class (the parent, or superclass). Inheritance lets a class reuse and extend another class's code. The code is HL, in B3.2.1.",
+            "Polymorphism: polymorphism means different classes can be used through the same interface, allowing one method name to produce different behaviours depending on the object. It lets subclasses override parent methods so each object responds in its own way. In short, polymorphism enables one interface, many implementations. There are two types: method overloading and method overriding. The code is HL, in B3.2.2.",
+            "Special methods: an accessor (getter) returns an attribute of an object. A mutator (setter) updates the value of a private attribute, usually with validation or side effects, so the state of the object is changed. A constructor in Python is the special method `__init__` that runs automatically when you create an object. Its job is to initialise instance variables and set up the object's initial state.",
+            "Access modifiers: in Python, access modifiers are not enforced by the language the way Java or C++ does. Python uses naming conventions to signal whether an attribute or method is meant to be public or private. By default, attributes and methods are public. A name without a leading underscore is public, so it is accessible from anywhere. A single leading underscore, as in `_balance`, marks a name as internal. A double underscore prefix indicates that it is private. Python uses name mangling to change that name behind the scenes, to `_ClassName__name`, which makes it harder to access accidentally. Dunder methods such as `__init__` and `__str__` are not mangled. The double underscore is on both sides.",
           ],
         },
-        { type: "p", text: "Three method roles come up constantly. A constructor, in Python the __init__ method, runs when the object is created and sets the starting state. An accessor, or getter, returns an attribute. A mutator, or setter, changes a private attribute, usually checking the new value first. Changing state is the point of a mutator: after a successful call, the object is different." },
-        { type: "p", text: "Python does not enforce access the way Java or C++ does. The convention is the signal. No leading underscore means public: anyone may use it. One leading underscore, as in _balance, means internal: other code can still read it, but should not. Two leading underscores, as in __code, trigger name mangling. Python rewrites the name to _ClassName__code so that accidental access, and a subclass that happens to use the same name, do not collide with it. Dunder methods such as __init__ and __str__ are not mangled. The double underscore is on both sides." },
         {
           type: "code",
           title: "Name mangling is a rename, not a lock",
@@ -61,29 +64,27 @@ except AttributeError:
 print(s._Secret__code)  # 1234`,
           caption: "The second line works, which is the point. Privacy here is a warning plus a renamed attribute, not a guarantee. A real exam answer should say that.",
         },
-        { type: "p", text: "OOP earns its keep when the problem is made of several entities with different jobs. A library splits into Book, Member and Loan. A game splits into Player, Enemy and Item. A shop splits into Product, Cart and Order. Each class has a role, so a change to lending rules can sit inside Loan instead of being scattered through unrelated functions." },
+        { type: "h3", text: "Why OOP can help" },
+        { type: "p", text: "OOP is often a strong choice when a problem involves several real-world entities with different responsibilities. A library system can be broken into Book, Member, and Loan objects. A game can be broken into Player, Enemy, and Item objects. An online shop can be broken into Product, Cart, and Order objects." },
+        { type: "p", text: "By giving each class a clear role, the program becomes easier to reason about. Changes in one part of the system can often be made inside one class instead of being scattered across unrelated code." },
+        { type: "h3", text: "Advantages and disadvantages" },
+        { type: "p", text: "Advantages:" },
         {
-          type: "columns",
+          type: "list",
           items: [
-            {
-              title: "Advantages",
-              tone: "ok",
-              points: [
-                "Classes can be reused in other parts of the program, and in other programs.",
-                "Work splits across people: different groups can build different classes at the same time.",
-                "A small class with its own data can be tested on its own.",
-              ],
-            },
-            {
-              title: "Disadvantages",
-              tone: "bad",
-              points: [
-                "More machinery than a short script needs. Small problems get more complex, not less.",
-                "Object-oriented programs are often larger, which matters when storage is tight.",
-                "The design has to exist before the code. That planning is real work.",
-                "Little gain on a minor project, so the extra structure is not worth it.",
-              ],
-            },
+            "Code reuse: a class created for an object-oriented program can easily be reused in other programs, and in other parts of the program.",
+            "Speed of development: work can be split across development groups, so developers can work on different parts of the program at the same time.",
+            "Quicker to test: each module is small and independent, and can therefore be tested separately.",
+          ],
+        },
+        { type: "p", text: "Disadvantages:" },
+        {
+          type: "list",
+          items: [
+            "Increased complexity for small problems.",
+            "Size: object-oriented programs are in general larger than other programs. That may pose a problem when there is only limited storage.",
+            "Effort: object-oriented programs require a lot of work to create. A great deal of planning goes into an object-oriented program well before a single piece of code is written.",
+            "Unsuitable for minor projects. OOP increases complexity but gains little for small projects.",
           ],
         },
         {
@@ -108,8 +109,10 @@ book = LibraryBook("1984", "George Orwell")
 print(book.borrow())     # True
 print(book._on_loan)     # True
 print(book.borrow())     # False, already out`,
-          caption: "The object stores _title, _author and _on_loan. `borrow` and return_book are the only behaviours that should change that flag. The single underscore says those attributes are internal.",
+          caption: "`borrow()` prints True the first time and False the second time, because `_on_loan` is already True.",
         },
+        { type: "p", text: "In this example, the object stores its own state in `_title`, `_author`, and `_on_loan`. These instance variables are treated as private. Variables with two leading underscores are also private, and they trigger name mangling, which makes them difficult to access from the outside. The Secret class above is that case." },
+        { type: "p", text: "The methods `borrow()` and `return_book()` are the behaviours that control that state." },
         { type: "lab", name: "library" },
         { type: "callout", kind: "exam", label: "Exam watch", text: "If the question says \"evaluate\", name the idea and then say when it helps and when it does not. \"OOP allows code reuse\" on its own is thin. \"The Book class can be used by Loan and by the catalogue, but a one-off conversion script does not need a class hierarchy\" is an evaluation." },
         { type: "more", href: "b3-2-multiple-classes.html", label: "HL: inheritance and polymorphism in B3.2" },
@@ -135,6 +138,9 @@ print(book.borrow())     # False, already out`,
             "UML is a planning diagram. It is not Python, and it is not optional in this statement.",
           ],
         },
+        { type: "p", text: "Class design begins before code is written. Start by identifying the important entities in the problem, the data each entity must store, and the actions each entity must perform. A strong design gives each class one clear responsibility." },
+        { type: "p", text: "The syllabus also points to UML class diagrams. A UML class diagram is a planning tool that shows class names, attributes, methods, and relationships between classes. Even if the final code is Python, UML still helps structure the design." },
+        { type: "h3", text: "Questions to ask when designing a class" },
         {
           type: "list",
           items: [
@@ -176,8 +182,9 @@ print(book.borrow())     # False, already out`,
 
     def is_enrolled(self, course: str) -> bool:
         return course in self.courses`,
-          caption: "This version leaves `name`, student_id and `courses` public, so it does not yet match the minus signs on the diagram. A closer match stores _name, _student_id and _courses and lets outside code use the three methods only. The responsibility is unchanged: this class manages one student's course list.",
+          caption: "This version leaves `name`, student_id and `courses` public, so it does not yet match the minus signs on the diagram. A closer match stores `_name`, `_student_id` and `_courses` and lets outside code use the three methods only.",
         },
+        { type: "p", text: "The design is simple because the class has one main job: manage a student's course list. This is usually better than putting student registration, fee calculation, timetable printing, and messaging into the same class." },
         { type: "callout", kind: "note", label: "Remember", text: "UML method names in the class notes use the American spelling `enrol`. The Python uses `enroll`. Either is fine in an answer if you are consistent. What an examiner is checking is the responsibility, the data, and which methods mutate state." },
       ],
     },
@@ -201,6 +208,19 @@ print(book.borrow())     # False, already out`,
             "Use the shared value for a fact about the whole class, such as how many objects exist.",
           ],
         },
+        { type: "p", text: "The syllabus uses the terms static and non-static. Python does not use the keyword `static` for variables, but the idea still exists through class attributes, instance attributes, class methods, and static methods." },
+        { type: "h3", text: "Python equivalents" },
+        {
+          type: "list",
+          items: [
+            "Instance attribute: belongs to one object. Accessed through `self`, for example `self.speed`.",
+            "Class attribute: belongs to the class itself and is shared by all objects, for example `Bike.count`.",
+            "Instance method: works with one object's data and receives `self`.",
+            "Class method: uses `@classmethod`, receives `cls`, and usually works with class-level data.",
+            "Static method: uses `@staticmethod` and behaves like a utility function placed inside the class namespace.",
+          ],
+        },
+        { type: "p", text: "Use an instance attribute when each object should keep its own separate value. Use a class attribute when one value should be shared across every object of that class." },
         {
           type: "table",
           title: "The five Python forms",
@@ -241,8 +261,9 @@ print(commuter.speed)       # 20
 print(racer.speed)          # 30, unchanged
 print(Bike.total_bikes())   # 2
 print(Bike.km_to_miles(10)) # 6.21371`,
-          caption: "`accelerate` must be an instance method because it changes one bike. total_bikes uses cls.count, so a subclass that shares the counter still works. km_to_miles uses neither a bike nor the class, so it is static: a function parked inside the class.",
+          caption: "`accelerate` must be an instance method because it changes one bike. `total_bikes` uses `cls.count`, so a subclass that shares the counter still works. `km_to_miles` uses neither a bike nor the class, so it is static: a function parked inside the class.",
         },
+        { type: "p", text: "Every Bike object has its own `speed`, so `speed` is an instance attribute. The class-wide value `count` tracks how many bikes have been created, so it is a class attribute shared across all objects." },
         { type: "lab", name: "bikes" },
         { type: "callout", kind: "exam", label: "Exam watch", text: "A common slip is to store a shared total as `self.count = self.count + 1` after reading a class attribute. The first time this runs, Python finds `count` on the class, then the assignment creates a new instance attribute that hides it. Later bikes no longer update the shared counter. Write `Bike.count += 1`, or `type(self).count += 1`, when the value is meant to be shared." },
       ],
@@ -267,6 +288,8 @@ print(Bike.km_to_miles(10)) # 6.21371`,
             "A method call applies behaviour to one particular object, the one before the dot.",
           ],
         },
+        { type: "p", text: "To define a class in Python, use the `class` keyword. To instantiate an object, call the class name like a function. Python treats classes as callable objects, creates a new instance, and then runs `__init__` to initialise the new object's state." },
+        { type: "p", text: "In beginner OOP discussions, `__init__` is often described as a constructor because it is the method that initialises object data. More precisely, Python creates the object first and then calls `__init__` to customise it." },
         {
           type: "code",
           title: "A car you can accelerate",
@@ -284,12 +307,13 @@ print(my_car.make)    # Toyota
 print(my_car.speed)   # 15`,
           caption: "Car(\"Toyota\") instantiates the object and initialises it in one expression. The default speed is 0, then accelerate(15) changes only my_car. A second Car(\"Honda\") would still be on 0.",
         },
+        { type: "h3", text: "Key ideas to explain" },
         {
-          type: "columns",
+          type: "list",
           items: [
-            { title: "Class definition", text: "The blueprint is created when Python executes the `class` statement. No car exists yet, and no memory is holding a make or a speed." },
-            { title: "Instantiation", text: "Calling Car(...) allocates a new instance. Each call makes a distinct object, even if the arguments are identical." },
-            { title: "Initialisation", text: "__init__ writes the starting state: make, and speed defaulting to 0. Skip this and the object exists but has none of the attributes the methods expect." },
+            "Class definition: the blueprint is created. No car exists yet, and no memory is holding a make or a speed.",
+            "Instantiation and initialisation: instantiation allocates memory to create a concrete instance of a class. Initialisation sets that new instance's starting state, assigning default or given values to its attributes. Calling `Car(...)` does both. Each call makes a distinct object, even when the arguments match.",
+            "Method call: behaviour is applied to that particular object, the one before the dot.",
           ],
         },
         { type: "p", text: "Java can declare several constructors, and the compiler picks one from the argument types. Python does not. A class has one __init__. If you need another way to build the same kind of object, give __init__ default arguments, or write a class method that prepares the arguments and then calls cls(...). That second method is an alternative constructor. It is not overloading." },
@@ -318,9 +342,21 @@ parsed = Date.from_string("2026-05-07")`,
       nav: "Methods",
       kicker: "Common methods · supports B3.1.4 and B3.1.5",
       title: "Constructors, getters, setters, __str__ and __eq__",
-      lede: "These are the methods the class notes treat as standard equipment. Getters and setters are how encapsulation is actually written. __str__ and __eq__ change how an object behaves with `print` and ==.",
+      lede: "These are the methods the class notes treat as standard equipment. Getters and setters are how encapsulation is actually written. `__str__` and `__eq__` change how an object behaves with `print` and `==`.",
       blocks: [
-        { type: "p", text: "A getter reads a private attribute. A setter writes one, and is the place for the rule: a balance cannot be negative, a grade must be between 0 and 100, a name cannot be empty. You need both styles below. The property style is the usual Python. The get_ and set_ style is the conventional OOP form, and it is what a question written in Java vocabulary is often expecting you to recognise." },
+        { type: "h3", text: "Constructor" },
+        { type: "p", text: "A constructor in Python is a special method called automatically when a new object of a class is instantiated. Its main role is to initialise the object's instance variables, its state, with starting values." },
+        { type: "p", text: "In Python, the `__init__()` method serves as the standard constructor. The notes also say a class can have multiple constructors with different parameters. Java can do that, and the compiler picks one from the argument types. Python still has one `__init__`. A second way to build the same kind of object is a class method that prepares the arguments and then calls `cls(...)`, as `Date.from_string` does above. That is an alternative constructor, not overloading." },
+        { type: "h3", text: "Getters and setters" },
+        { type: "p", text: "Getters and setters, also known as accessors and mutators, are public methods used to access and update private attributes safely. That is one way encapsulation is written." },
+        {
+          type: "list",
+          items: [
+            "Getters read and retrieve the current value of a private variable.",
+            "Setters write or update the value of a private variable, usually with validation checks. A balance cannot be negative, a grade must be between 0 and 100, a name cannot be empty.",
+          ],
+        },
+        { type: "p", text: "In Python, getters and setters are most cleanly implemented with the `@property` decorator. Callers then use the method like a regular attribute, and the class still controls validation." },
         {
           type: "code",
           title: "Properties: methods that look like attributes",
@@ -346,8 +382,9 @@ try:
     account.balance = -50
 except ValueError as error:
     print(error)         # Balance cannot be negative.`,
-          caption: "`self.balance = balance` inside __init__ already goes through the setter, so a BankAccount(\"Alice\", -10) fails at construction rather than storing a bad value. The stored attribute is _balance. The public name `balance` is the property.",
+          caption: "`self.balance = balance` inside `__init__` already goes through the setter, so `BankAccount(\"Alice\", -10)` fails at construction rather than storing a bad value. The stored attribute is `_balance`. The public name `balance` is the property.",
         },
+        { type: "p", text: "In conventional object-oriented programming, similar to Java or C++, getters and setters are explicit methods prefixed with `get_` and `set_`." },
         {
           type: "code",
           title: "The same rules as get_balance and set_balance",
@@ -371,9 +408,18 @@ try:
     account.set_balance(-50)
 except ValueError as error:
     print(error)              # Balance cannot be negative.`,
-          caption: "Same protection, more obvious method calls. Use this form when the question says accessor and mutator, or when you want the call sites to show that a method is running.",
+          caption: "Same protection, with the method call written out. The getter is called with parentheses. The setter is passed the new value.",
         },
-        { type: "p", text: "__str__ and __eq__ are dunder methods. They customise built-in operations. __str__ is what print(obj) and str(obj) use, so the object can show a readable sentence instead of `<Book object at 0x7f...>`. __eq__ is what == uses. Without it, == asks whether the two names refer to the same object in memory. With it, you choose which values count as the same book. Comparing with `is` still means \"same object\", and __eq__ does not change `is`." },
+        { type: "p", text: "You must know both ways to define getters and setters. The property style is the usual Python. The `get_` and `set_` style is what a question written in Java vocabulary is often expecting you to recognise." },
+        { type: "h3", text: "__str__ and __eq__" },
+        { type: "p", text: "Both `__str__` and `__eq__` are special dunder (double underscore) methods. They customise how objects behave with built-in functions and operators." },
+        {
+          type: "list",
+          items: [
+            "`__str__` controls what `print(obj)` or `str(obj)` returns: a human-readable string. Without it, `print` shows something like `<Book object at 0x7f...>`.",
+            "`__eq__` controls how `==` compares two objects by their values rather than by their memory locations. Without it, `==` asks whether both names refer to the same object. Comparing with `is` still means the same object, and `__eq__` does not change `is`.",
+          ],
+        },
         {
           type: "code",
           title: "Same ISBN means the same book, even in two objects",
@@ -409,7 +455,7 @@ print(book1 == "1984")  # False, not a Book`,
       nav: "References",
       kicker: "Object references · supports B3.1.4",
       title: "A name points at an object. It does not contain it.",
-      lede: "An object reference is a name bound to an object in memory. Assigning one variable to another copies the reference. Both names then refer to the same object.",
+      lede: "An object reference in Python is a name, or variable, that points to an object stored in memory. The name does not contain the object. It only refers to it.",
       blocks: [
         {
           type: "code",
@@ -428,8 +474,10 @@ print(acc1 is acc2)   # True
 acc2.deposit(200)
 print(acc1.balance)   # 700
 print(acc2.balance)   # 700`,
-          caption: "One call to BankAccount(...), so one object. Two references. The deposit is visible through both names because there is nothing else to see. To give acc2 an independent account, construct another one: `acc2 = BankAccount(acc1.owner, acc1.balance)`. Assignment alone will not do it.",
+          caption: "`acc1 is acc2` prints True. After `acc2.deposit(200)`, both names print 700.",
         },
+        { type: "p", text: "In the example above, there is only one object, created by calling the constructor. There are two object references, and both refer to that same object." },
+        { type: "p", text: "If you want `acc2` to be an independent account rather than an alias, you must instantiate a new object, or create a copy, rather than assigning `acc2 = acc1`. One way is `acc2 = BankAccount(acc1.owner, acc1.balance)`." },
         { type: "lab", name: "references" },
         { type: "callout", kind: "note", label: "Remember", text: "Passing an object into a function also passes the reference. A function that calls `deposit` on its parameter changes the caller's object. Rebinding the parameter, with `account = BankAccount(...)`, does not change the caller's variable. Rebinding a name is local. Mutating the object is shared." },
       ],
@@ -452,6 +500,26 @@ print(acc2.balance)   # 700`,
         },
         { type: "h3", text: "Encapsulation" },
         { type: "p", text: "Encapsulation means putting data and the functions that operate on it into one unit, usually a class, and controlling how outside code reaches that data. Its main job is to protect invariants: rules the object must always obey." },
+        { type: "h3", text: "Advantages of encapsulation" },
+        { type: "p", text: "There are several benefits of using encapsulation in programming." },
+        {
+          type: "list",
+          items: [
+            "Firstly, it promotes maintenance. Any changes made to the data, or to the way it is stored and accessed internally, can be accommodated in just one class. Other classes that use that data can continue to use the public accessor methods and do not need to be modified.",
+            "Secondly, encapsulation enhances data hiding and security. A class can hide the way data is stored, preventing accidental access or modification. It can also restrict the ways its data and actions are altered or called, which is an extra layer of security.",
+            "Thirdly, encapsulation can make testing easier, because the data structure is contained in a single class. Each class manages its own data, so classes can be tested independently without relying on the internal details of other classes.",
+            "Lastly, encapsulation can speed up development. Different programmers can work independently on different classes. Because the internal workings of each class are hidden, they can work on several classes at the same time without interfering with each other's work.",
+          ],
+        },
+        { type: "p", text: "Encapsulation is implemented with:" },
+        {
+          type: "list",
+          items: [
+            "Public methods.",
+            "Controls of visibility of operations, methods and fields.",
+            "Data that is private, and not directly accessible.",
+          ],
+        },
         { type: "h3", text: "Without encapsulation" },
         { type: "p", text: "Here a bank account is just a dictionary. Any code can change the balance directly, so nothing stops it from going negative." },
         {
