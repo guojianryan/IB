@@ -648,6 +648,14 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
 
 .rhythm > * { margin-top: 0; margin-bottom: 0; }
 
+.subhead {
+  font-family: var(--sans);
+  font-size: 1.35rem;
+  letter-spacing: 0;
+}
+
+.rhythm > .subhead { margin-bottom: -1.1rem; }
+
 .rhythm .section-head { margin-bottom: 0; }
 
 .rhythm .section-head .kicker { margin-bottom: 0.65rem; }

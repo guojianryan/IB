@@ -239,6 +239,7 @@ function teach(section) {
 
 function renderBlock(item) {
   if (item.type === "p") return richEl("p", "teaching", item.text);
+  if (item.type === "h3") return richEl("h3", "subhead", item.text);
   if (item.type === "list") return bulletList(item.items);
   if (item.type === "columns") return columns(item);
   if (item.type === "table") return dataTable(item);
