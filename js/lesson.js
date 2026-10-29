@@ -337,10 +337,18 @@ function classBox(spec) {
   return wrap;
 }
 
+function memberLine(line) {
+  if (line && typeof line === "object") return { text: line.text ?? "", static: Boolean(line.static) };
+  return { text: line ?? "", static: false };
+}
+
 function compartment(lines) {
   const part = el("div", "compartment");
   const list = el("ul");
-  (lines?.length ? lines : [" "]).forEach((line) => list.append(el("li", "", line)));
+  (lines?.length ? lines : [" "]).forEach((line) => {
+    const member = memberLine(line);
+    list.append(el("li", member.static ? "static-member" : "", member.text));
+  });
   part.append(list);
   return part;
 }
@@ -407,7 +415,10 @@ function drawClass(svg, node) {
 function compartmentLines(svg, node, lines, y) {
   const rows = lines?.length ? lines : [""];
   rows.forEach((line, index) => {
-    svg.append(svgEl("text", { x: node.x + 12, y: y + 18 + index * 20 }, line));
+    const member = memberLine(line);
+    const attrs = { x: node.x + 12, y: y + 18 + index * 20 };
+    if (member.static) attrs.class = "uml-static";
+    svg.append(svgEl("text", attrs, member.text));
   });
   return y + rows.length * 20 + 12;
 }
@@ -534,22 +545,25 @@ const labs = {
         status.replaceChildren(readout([
           "title: 1984",
           "author: George Orwell",
-          `_on_loan: ${book.onLoan}`,
+          `on_loan: ${book.onLoan}`,
         ]));
         feedback.className = ok ? "feedback good" : "feedback bad";
         setRich(feedback, message);
       }
       const actions = el("div", "row-actions");
       actions.append(button("borrow()", () => {
-        if (book.onLoan) paint("borrow() returns `False`. The book is already on loan, so the state stays `True`.", false);
+        if (book.onLoan) paint("`borrow()` returns `False`. The book is already on loan, so `on_loan` stays `True`.", false);
         else {
           book.onLoan = true;
-          paint("borrow() returns `True`. _on_loan changes from `False` to `True`.");
+          paint("`borrow()` returns `True`. `on_loan` changes from `False` to `True`.");
         }
       }));
       actions.append(button("return_book()", () => {
-        book.onLoan = false;
-        paint("return_book() sets _on_loan back to `False`. It does not return a value.");
+        if (!book.onLoan) paint("`return_book()` returns `False`. The book is already on the shelf, so `on_loan` stays `False`.", false);
+        else {
+          book.onLoan = false;
+          paint("`return_book()` returns `True` and sets `on_loan` back to `False`.");
+        }
       }, "btn small ghost"));
       box.append(status, actions, feedback);
       paint("The constructor has run. The book starts on the shelf.");
@@ -630,7 +644,7 @@ const labs = {
   },
 
   bank(spec) {
-    return labFrame(spec.title || "The account protects its balance", spec.lede || "Outside code reads `balance` and calls `deposit` or `withdraw`. A deposit that is not positive, and a withdrawal the balance cannot cover, are refused. Assigning to `balance` fails, because the property has no setter.", (box) => {
+    return labFrame(spec.title || "The account protects its balance", spec.lede || "Outside code reads `balance` and calls `deposit` or `withdraw`. A deposit or withdrawal that is not positive is refused with its own message. A withdrawal the balance cannot cover is refused as insufficient funds. Assigning to `balance` fails, because the property has no setter.", (box) => {
       let balance = 100;
       const amount = el("input");
       amount.type = "number";
@@ -659,7 +673,8 @@ const labs = {
       }));
       actions.append(button("withdraw", () => {
         const money = value();
-        if (!(money > 0 && money <= balance)) paint("`withdraw` raises ValueError: Insufficient funds. `_balance` stays unchanged.", false);
+        if (!(money > 0)) paint("`withdraw` raises ValueError: Withdrawal must be positive. `_balance` stays unchanged.", false);
+        else if (money > balance) paint("`withdraw` raises ValueError: Insufficient funds. `_balance` stays unchanged.", false);
         else {
           balance -= money;
           paint(`Withdrew ${money}. \`withdraw\` updated \`_balance\`.`);
@@ -669,7 +684,7 @@ const labs = {
         paint("Assignment raises AttributeError. `balance` has no setter, so `_balance` stays unchanged.", false);
       }, "btn small ghost"));
       box.append(label, status, actions, feedback);
-      paint("Alice's account starts at 100.", true);
+      paint("Mei's account starts at 100.", true);
     });
   },
 

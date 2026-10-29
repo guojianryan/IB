@@ -906,6 +906,9 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
 
 .classbox li + li { margin-top: 0.2em; }
 
+.classbox li.static-member,
+.uml-svg text.uml-static { text-decoration: underline; text-underline-offset: 0.15em; }
+
 .uml-frame { margin: 16px 0 0; }
 
 .uml-svg {
