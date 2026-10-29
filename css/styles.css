@@ -851,7 +851,7 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
 .classbox-wrap figcaption {
   color: var(--muted);
   font-size: 0.95rem;
-  margin-top: 0.95rem;
+  margin-top: 0.55rem;
 }
 
 .code-scroll {
@@ -912,9 +912,9 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
 .uml-frame { margin: 16px 0 0; }
 
 .uml-svg {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
-  max-width: 980px;
   display: block;
 }
 

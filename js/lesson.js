@@ -367,21 +367,33 @@ function svgEl(tag, attrs, text) {
   return node;
 }
 
+function compartmentHeight(lines) {
+  if (!lines?.length) return 0;
+  return lines.length * 20 + 12;
+}
+
 function boxHeight(node) {
   const head = node.stereo ? 46 : 32;
-  const hasAttrs = node.attrs?.length;
-  const hasOps = node.ops?.length;
-  if (!hasAttrs && !hasOps) return head + 8;
-  const rows = (list) => Math.max(list?.length || 0, 1) * 20 + 12;
-  return head + rows(node.attrs) + rows(node.ops);
+  const attrsH = compartmentHeight(node.attrs);
+  const opsH = compartmentHeight(node.ops);
+  if (!attrsH && !opsH) return head + 8;
+  return head + attrsH + opsH;
 }
 
 function umlDiagram(spec) {
+  const pad = 16;
   const nodes = spec.nodes.map((node) => ({ ...node, h: boxHeight(node) }));
   const byId = Object.fromEntries(nodes.map((node) => [node.id, node]));
+  // Fit the viewBox to the drawn boxes so unused height does not scale into a gap.
+  const contentW = nodes.reduce((max, node) => Math.max(max, node.x + node.w), 0) + pad;
+  const contentH = nodes.reduce((max, node) => Math.max(max, node.y + node.h), 0) + pad;
+  const w = Math.max(contentW, 1);
+  const h = Math.max(contentH, 1);
   const svg = svgEl("svg", {
     class: "uml-svg",
-    viewBox: `0 0 ${spec.w} ${spec.h}`,
+    viewBox: `0 0 ${w} ${h}`,
+    width: String(w),
+    height: String(h),
     role: "img",
   });
   svg.append(svgEl("title", {}, spec.label || spec.title || "UML class diagram"));
@@ -397,6 +409,8 @@ function umlDiagram(spec) {
 
 function drawClass(svg, node) {
   const head = node.stereo ? 46 : 32;
+  const hasAttrs = Boolean(node.attrs?.length);
+  const hasOps = Boolean(node.ops?.length);
   svg.append(svgEl("rect", { class: "uml-box", x: node.x, y: node.y, width: node.w, height: node.h, rx: 8 }));
   svg.append(svgEl("rect", { class: "uml-head", x: node.x + 1, y: node.y + 1, width: node.w - 2, height: head - 1 }));
   if (node.stereo) {
@@ -405,11 +419,17 @@ function drawClass(svg, node) {
   } else {
     svg.append(svgEl("text", { class: "uml-name", x: node.x + node.w / 2, y: node.y + 21, "text-anchor": "middle" }, node.name));
   }
-  if (!node.attrs?.length && !node.ops?.length) return;
+  if (!hasAttrs && !hasOps) return;
   let y = node.y + head;
-  y = compartmentLines(svg, node, node.attrs, y);
-  svg.append(svgEl("line", { class: "uml-line", x1: node.x, y1: y, x2: node.x + node.w, y2: y }));
-  compartmentLines(svg, node, node.ops, y);
+  if (hasAttrs) y = compartmentLines(svg, node, node.attrs, y);
+  else if (hasOps) {
+    // Keep a divider under the name when only operations are present.
+    svg.append(svgEl("line", { class: "uml-line", x1: node.x, y1: y, x2: node.x + node.w, y2: y }));
+  }
+  if (hasAttrs && hasOps) {
+    svg.append(svgEl("line", { class: "uml-line", x1: node.x, y1: y, x2: node.x + node.w, y2: y }));
+  }
+  if (hasOps) compartmentLines(svg, node, node.ops, y);
 }
 
 function compartmentLines(svg, node, lines, y) {
