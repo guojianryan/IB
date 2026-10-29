@@ -472,7 +472,7 @@ function drawEdge(svg, from, to, edge) {
     const diamond = svgEl("polygon", {
       points: `${x1},${y1} ${midX + px * wing},${midY + py * wing} ${farX},${farY} ${midX - px * wing},${midY - py * wing}`,
       class: kind === "compose" ? "rel filled" : "rel",
-      style: kind === "compose" ? "fill:#edf1f7" : "fill:#07090f",
+      style: kind === "compose" ? "fill:#eef2fb" : "fill:#0b1020",
     });
     svg.append(diamond);
     x1 = farX;
@@ -486,7 +486,7 @@ function drawEdge(svg, from, to, edge) {
     svg.append(svgEl("polygon", {
       points: `${x2},${y2} ${baseX + px * 8},${baseY + py * 8} ${baseX - px * 8},${baseY - py * 8}`,
       class: "rel",
-      fill: "#10141c",
+      fill: "#151b2e",
     }));
     x2 = baseX;
     y2 = baseY;
@@ -497,7 +497,7 @@ function drawEdge(svg, from, to, edge) {
     svg.append(svgEl("polygon", {
       points: `${x2},${y2} ${baseX + px * 5},${baseY + py * 5} ${baseX - px * 5},${baseY - py * 5}`,
       class: "rel filled",
-      style: "fill:#edf1f7",
+      style: "fill:#eef2fb",
     }));
     x2 = baseX;
     y2 = baseY;
