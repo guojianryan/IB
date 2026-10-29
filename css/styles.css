@@ -947,6 +947,18 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
 
 .more { margin-top: 12px; }
 
+.more.prominent .btn {
+  padding: 12px 20px;
+  font-size: 1.05rem;
+  box-shadow: 0 0 0 4px rgba(126, 203, 255, 0.22);
+}
+
+.more.prominent .btn::after {
+  content: "↗";
+  font-size: 0.95em;
+  line-height: 1;
+}
+
 .rhythm > .code-figure,
 .rhythm > .uml-frame,
 .rhythm > .classbox-wrap,

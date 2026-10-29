@@ -250,8 +250,8 @@ function renderBlock(item) {
   if (item.type === "pair") return pair(item);
   if (item.type === "lab") return labs[item.name](item);
   if (item.type === "more") {
-    const paragraph = el("p", "more");
-    const link = el("a", "btn ghost small", item.label);
+    const paragraph = el("p", item.prominent ? "more prominent" : "more");
+    const link = el("a", item.prominent ? "btn" : "btn ghost small", item.label);
     link.href = item.href;
     if (item.external) {
       link.target = "_blank";
