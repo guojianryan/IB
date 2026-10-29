@@ -725,12 +725,13 @@ const labs = {
   },
 
   patterns(spec) {
-    return labFrame(spec.title || "Singleton keeps one object. Factory makes a new one.", spec.lede || "Call Settings three times: every call hands back the same object. Call the factory three times: every call builds a new notifier.", (box) => {
+    return labFrame(spec.title || "Singleton keeps one object. Factory makes a new one.", spec.lede || "Predict first: after a third Settings(), will the id change? After a third factory call, will you see a new email-n? Then press the buttons.", (box) => {
       let settings = null;
       let settingsCalls = 0;
       let factoryCalls = 0;
       const made = [];
       const status = el("div");
+      const predict = el("p", "feedback", "Prediction: the third Settings() should still show settings-1. Each factory call should add a new email-n.");
       function paint() {
         status.replaceChildren(readout([
           settings ? `Settings() calls: ${settingsCalls}. id of the only instance: ${settings}` : "Settings() has not been called.",
@@ -755,13 +756,13 @@ const labs = {
         made.length = 0;
         paint();
       }, "btn small ghost"));
-      box.append(actions, status);
+      box.append(predict, actions, status);
       paint();
     });
   },
 
   observer(spec) {
-    return labFrame(spec.title || "The station notifies whoever is attached", spec.lede || "WeatherStation does not contain phone or television code. It calls `update` on each attached observer. Detach one and the next reading skips it.", (box) => {
+    return labFrame(spec.title || "The station notifies whoever is attached", spec.lede || "Predict first: with the boxes as they are, which displays will print when you press set_temperature? Then change the attachments and predict again.", (box) => {
       const phone = el("input");
       phone.type = "checkbox";
       phone.id = "obs-phone";
@@ -781,6 +782,7 @@ const labs = {
       const label = el("label", "field", "New temperature ");
       label.append(temperature);
       const status = el("div");
+      status.replaceChildren(readout(["Predict which attached displays will print, then press set_temperature."]));
       function publish() {
         const reading = Number(temperature.value);
         const lines = [`WeatherStation temperature = ${reading}`];
@@ -790,7 +792,6 @@ const labs = {
         status.replaceChildren(readout(lines));
       }
       box.append(choices, label, button("set_temperature", publish), status);
-      publish();
     });
   },
 };
@@ -847,6 +848,25 @@ function practice(topic) {
   cell.append(el("span", "", "Score"), score);
   board.append(cell);
   wrap.append(board);
+  if (topic.tasks?.length) {
+    const taskHead = el("div", "section-head");
+    taskHead.append(el("p", "kicker", "Go further"));
+    taskHead.append(el("h2", "", "Draw, spot, and structured questions"));
+    taskHead.append(el("p", "lede", "Attempt each one before revealing the model answer. These are revision prompts, not an official paper."));
+    wrap.append(taskHead);
+    topic.tasks.forEach((task, index) => {
+      const card = el("article", "q");
+      const label = task.kind === "draw" ? "Draw the diagram" : task.kind === "spot" ? "Spot the problem" : "Exam-style";
+      card.append(richEl("h3", "", `${index + 1}. ${label}`));
+      card.append(richEl("p", "", task.prompt));
+      const reveal = el("div");
+      card.append(button("Show model answer", () => {
+        reveal.replaceChildren(richEl("p", "feedback good", task.reveal));
+      }, "btn small ghost"));
+      card.append(reveal);
+      wrap.append(card);
+    });
+  }
   block.append(wrap);
   return block;
 }

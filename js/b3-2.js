@@ -3,9 +3,9 @@ export const topic = {
   title: "Fundamentals of OOP for multiple classes",
   kicker: "IB DP Computer Science · Theme B · HL only",
   lede: "B3.1 built one class. B3.2 is what happens when classes work together. A subclass reuses its parent's code, the same call can do different work, an abstract class defines the interface, and a has-a relationship is either ownership or a looser grouping. The syllabus names three design patterns: singleton, factory, and observer.",
-  chips: ["B3.2", "HL only", "Python 3", "Part of the 23 HL hours"],
+  chips: ["B3.2", "HL only", "Python 3", "Part of B3's 23 HL hours"],
   mapTitle: "The five statements in B3.2",
-  mapLede: "All five are HL only. SL stops at B3.1, but the definitions of inheritance and polymorphism are still named inside B3.1.1.",
+  mapLede: "All five are HL only. SL stops at B3.1, but the definitions of inheritance and polymorphism are still named inside B3.1.1. B3 as a whole is recommended at 23 hours for HL; this page is the multiple-class half.",
   map: [
     ["#inheritance", "B3.2.1", "Inheritance", "An is-a hierarchy, reuse, and what `private`, `protected`, `public` and `default` do to a subclass."],
     ["#polymorphism", "B3.2.2", "Polymorphism", "Overriding at run time, and overloading decided at compile time."],
@@ -35,8 +35,7 @@ export const topic = {
             "Python has no Java access keywords. The syllabus still expects Java's four access levels, and the Python naming convention.",
           ],
         },
-        { type: "p", text: "Inheritance expresses an is-a relationship. A subclass is a more specialised version of a parent class. The subclass automatically reuses non-private attributes and methods from the parent, and it can add new behaviour or override inherited methods." },
-        { type: "p", text: "Inheritance promotes code reuse because common behaviour can be written once in the parent class and then inherited by many subclasses." },
+        { type: "p", text: "Inheritance expresses an is-a relationship. A subclass is a more specialised version of a parent class. The subclass automatically reuses non-private attributes and methods from the parent, and it can add new behaviour or override inherited methods. Common behaviour is written once in the parent and inherited by many subclasses." },
         {
           type: "code",
           title: "Person, and two more specific people",
@@ -68,13 +67,36 @@ print(ada.introduce())
 print(isinstance(ada, Person))  # True: a teacher is a person`,
           caption: "`ada.introduce()` prints the parent sentence and then the subject. `isinstance(ada, Person)` is True, because a teacher is a person.",
         },
+        {
+          type: "code",
+          lang: "Java",
+          title: "The same hierarchy with extends and super",
+          source: `class Person {
+    protected String name;
+    Person(String name) { this.name = name; }
+    String introduce() { return "Hello, I am " + name + "."; }
+}
+
+class Teacher extends Person {
+    private String subject;
+    Teacher(String name, String subject) {
+        super(name);
+        this.subject = subject;
+    }
+    @Override
+    String introduce() {
+        return super.introduce() + " I teach " + subject + ".";
+    }
+}`,
+          caption: "`extends` names the parent. `super(name)` runs the parent's constructor. `@Override` marks that `introduce` replaces the parent version; the compiler checks the signature matches.",
+        },
         { type: "h3", text: "What the example shows" },
         {
           type: "list",
           items: [
             "`Teacher` and `Student` inherit from `Person`, so they reuse the `name` attribute and the `introduce` method.",
             "`super().__init__(name)` calls the parent initialiser so the inherited part of the object is set up correctly.",
-            "`super().introduce()` invokes the logic defined in the Person class. Each subclass uses method overriding to provide its own version for its own instances.",
+            "`super().introduce()` runs the parent's version. Each subclass overrides `introduce` for its own instances.",
             "The subclass can add new data, such as `subject`, and can also override methods.",
           ],
         },
@@ -82,11 +104,11 @@ print(isinstance(ada, Person))  # True: a teacher is a person`,
           type: "uml",
           w: 820,
           h: 360,
-          caption: "The hollow triangle points at the parent. It means generalisation: Teacher and Student inherit from Person. Person is concrete here, because the class can be constructed. The next section shows a parent that is abstract.",
+          caption: "The hollow triangle points at the parent. By UML convention each subclass box shows only what it adds or overrides: `subject` and `grade_level` are new; `introduce()` appears again because it is overridden. Inherited `name` stays in Person only.",
           nodes: [
             { id: "person", x: 280, y: 12, w: 260, name: "Person", attrs: ["+ name: str"], ops: ["+ introduce(): str"] },
-            { id: "teacher", x: 24, y: 210, w: 300, name: "Teacher", attrs: ["+ name: str", "+ subject: str"], ops: ["+ introduce(): str"] },
-            { id: "student", x: 470, y: 210, w: 320, name: "Student", attrs: ["+ name: str", "+ grade_level: int"], ops: ["+ introduce(): str"] },
+            { id: "teacher", x: 24, y: 210, w: 300, name: "Teacher", attrs: ["+ subject: str"], ops: ["+ introduce(): str"] },
+            { id: "student", x: 470, y: 210, w: 320, name: "Student", attrs: ["+ grade_level: int"], ops: ["+ introduce(): str"] },
           ],
           edges: [
             { from: "teacher", to: "person", kind: "inherit" },
@@ -135,12 +157,23 @@ except AttributeError:
         {
           type: "list",
           items: [
-            "Reusability: a subclass can reuse the data and behaviours defined in its superclass.",
-            "Extensibility: a subclass can add its own behaviours and data to extend its superclass's functionality.",
-            "Easy to maintain: changes made to the superclass are automatically reflected in the subclass, which reduces maintenance.",
-            "Simpler testing: behaviour inherited unchanged from the parent does not need to be tested again in the subclass. A method the subclass overrides still needs its own test.",
+            "Reuse: shared data and behaviour live once in the parent.",
+            "Extension: a subclass adds only what is new, such as `subject`.",
+            "Shared fixes: a fix in the parent reaches every subclass that still uses that code.",
+            "Focused tests: behaviour inherited unchanged need not be retested in the subclass, unless it calls a method the subclass overrides.",
           ],
         },
+        { type: "h3", text: "Disadvantages of inheritance" },
+        {
+          type: "list",
+          items: [
+            "Tight coupling / fragile base class: a change in the parent can silently break subclasses.",
+            "Deep hierarchies are hard to follow: you must read up the chain to know what a method does.",
+            "Wrong is-a claims, such as `Square(Rectangle)`, force awkward overrides when the relationship is not true in ordinary language.",
+            "Prefer composition when the relationship is really has-a. A car is not a kind of engine; that decision is B3.2.4.",
+          ],
+        },
+        { type: "callout", kind: "exam", label: "Exam watch", text: "\"Changes in the superclass are reflected in the subclass\" is both a benefit and a risk. An evaluate question wants both sides: reuse and shared fixes on one hand, fragile base class and deep hierarchies on the other." },
       ],
     },
     {
@@ -164,33 +197,19 @@ except AttributeError:
             "Because that decision is made at compile time, the running program does not spend time searching for the method, and the compiler can optimise the call.",
           ],
         },
-        { type: "p", text: "The word polymorphism comes from Greek:" },
-        {
-          type: "list",
-          items: [
-            "poly = many",
-            "morph = forms",
-          ],
-        },
-        { type: "p", text: "So polymorphism literally means many forms. Think of dogs. A Chihuahua, a Golden Retriever, and a German Shepherd look different and behave somewhat differently, but they are all still dogs. If you say \"Fetch!\", each dog hears the same command, but each one may carry it out differently." },
-        {
-          type: "list",
-          items: [
-            "A Chihuahua may run quickly and return.",
-            "A Golden Retriever may fetch enthusiastically.",
-            "A stubborn dog may take its time.",
-          ],
-        },
-        { type: "p", text: "The same command produces different behaviours depending on the specific dog. This is the basic idea of polymorphism: one interface, many forms of behaviour." },
-        { type: "p", text: "Polymorphism in OOP means that the same method call or interface can work with objects of different types. This makes code more flexible, because client code can focus on what an object can do rather than on its exact class." },
+        { type: "p", text: "Think of dogs. A Chihuahua, a Golden Retriever, and a German Shepherd all hear \"Fetch!\", but each may carry it out differently: one returns quickly, one enthusiastically, one slowly. The same command, different behaviour. That is the basic idea: one interface, many forms." },
+        { type: "p", text: "In OOP, the same method call can work with objects of different types. Client code focuses on what an object can do, not on its exact class." },
         { type: "h3", text: "Dynamic polymorphism in Python" },
         { type: "p", text: "Dynamic polymorphism happens when different subclasses provide their own versions of the same method and the program chooses the correct version at run time. In Python, this is usually demonstrated through method overriding." },
         {
           type: "code",
           title: "print_area does not mention Rectangle or Circle",
-          source: `class Shape:
+          source: `from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    @abstractmethod
     def area(self) -> float:
-        raise NotImplementedError
+        pass
 
 class Rectangle(Shape):
     def __init__(self, width: float, height: float):
@@ -212,7 +231,7 @@ def print_area(shape: Shape) -> None:
 
 print_area(Rectangle(4, 3))  # 12
 print_area(Circle(2))        # 12.56636`,
-          caption: "`print_area(Rectangle(4, 3))` prints 12. `print_area(Circle(2))` prints 12.56636.",
+          caption: "`Shape` is an abstract base class, so `Shape()` fails. `print_area(Rectangle(4, 3))` prints 12. `print_area(Circle(2))` prints 12.56636. B3.2.3 returns to why abstract classes cannot be constructed.",
         },
         { type: "p", text: "The function `print_area()` does not need to know whether it receives a Rectangle or a Circle. It simply calls `area()`. The specific implementation used depends on the actual object passed in." },
         { type: "p", text: "Dynamic binding makes it possible to write code that does not depend on one specific class. `print_area()` can take any subclass of Shape: a circle, a rectangle, a triangle, or a shape that has not been written yet. That function depends on Shape, not on the particular subclasses. A new kind of Shape does not force `print_area()` to change." },
@@ -220,7 +239,7 @@ print_area(Circle(2))        # 12.56636`,
           type: "uml",
           w: 800,
           h: 370,
-          caption: "`Rectangle.area` and `Circle.area` override `Shape.area`. The call `shape.area()` is valid because Shape declares `area`. Which body runs depends on the actual object.",
+          caption: "`Shape` is marked `<<abstract>>`, matching the ABC in the code. `Rectangle.area` and `Circle.area` override it. The call `shape.area()` is valid because Shape declares `area`. Which body runs depends on the actual object.",
           nodes: [
             { id: "shape", x: 280, y: 10, w: 240, name: "Shape", stereo: "<<abstract>>", attrs: [], ops: ["+ area(): float"] },
             { id: "rect", x: 20, y: 210, w: 300, name: "Rectangle", attrs: ["+ width: float", "+ height: float"], ops: ["+ area(): float"] },
@@ -236,9 +255,9 @@ print_area(Circle(2))        # 12.56636`,
         {
           type: "list",
           items: [
-            "An external program can use the same method on all subclasses.",
-            "An overridden method in a child class adds only the code needed for that subclass. Rectangle's `area` is a product. Circle's `area` is not a copy of it.",
-            "Dynamic binding lets you write code that is not dependent on a specific type.",
+            "One call site works for every subclass that shares the interface.",
+            "Each subclass writes only the code it needs. Rectangle's `area` is a product; Circle's is not a copy of it.",
+            "New subclasses do not force callers such as `print_area` to change.",
           ],
         },
         { type: "p", text: "Dynamic polymorphism has to resolve the method at run time. The language can check that `shape.area()` is a valid call, because Shape defines `area()`. If subclasses override `area()`, the language cannot know which version will run, because the actual object's class may be known only when the program is running. The call is resolved then: the runtime finds the object's class and calls that class's method. The extra lookup is a small cost. Dynamic polymorphism means the binding happens at run time, not at compile time." },
@@ -271,19 +290,23 @@ class ShoppingCart:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, ShoppingCart):
-            return self.owner == other.owner
+            return [(i.name, i.price) for i in self.items] == [
+                (i.name, i.price) for i in other.items
+            ]
         return False
 
 cart1 = ShoppingCart("Alice")
 cart1.add_item(Item("Book", 12.99))
 cart1.add_item(Item("Pen", 1.50))
 cart2 = ShoppingCart("Alice")
-print(str(cart1))    # Alice's Cart (2 items)
-print(len(cart1))    # 2
-print(cart1 == cart2)  # True, same owner, even though the carts hold different items`,
-          caption: "`str(cart1)` uses `__str__`. `len(cart1)` uses `__len__` and prints 2. `cart1 == cart2` uses `__eq__` and prints True, because the owners match, even though the carts hold different items. This cart's equality rule is a deliberate choice. Another design would compare the items.",
+cart2.add_item(Item("Book", 12.99))
+cart2.add_item(Item("Pen", 1.50))
+print(str(cart1))      # Alice's Cart (2 items)
+print(len(cart1))      # 2
+print(cart1 == cart2)  # True: same items, in the same order`,
+          caption: "`str(cart1)` uses `__str__`. `len(cart1)` uses `__len__` and prints 2. `cart1 == cart2` uses `__eq__` and prints True when the item lists match. Defining `__eq__` without `__hash__` makes the class unhashable; see the note in B3.1.4.",
         },
-        { type: "p", text: "This is often called operator overloading, because it defines how a built-in operator, such as `+`, `==`, or `<`, behaves for a custom object. Defining `__eq__` overloads `==`. Operator overloading lets Python's built-in operators work with your objects. `__str__` is the readable form. `__repr__` is the unambiguous form, useful in a debugger. `__len__` is what `len(cart)` calls." },
+        { type: "p", text: "This is often called operator overloading, because it defines how a built-in operator, such as `+`, `==`, or `<`, behaves for a custom object. Defining `__eq__` overloads `==`. Despite the name, Python's operator overloading is resolved at run time: you are overriding a method inherited from `object`. It is not the compile-time overloading described below. `__str__` is the readable form. `__repr__` is the unambiguous form, useful in a debugger. `__len__` is what `len(cart)` calls." },
         { type: "h3", text: "Static polymorphism" },
         { type: "p", text: "In Java, static polymorphism often refers to method overloading. Python does not support traditional compile-time method overloading by signature. True static polymorphism determines which method runs at compile time, rather than by resolving the call while the program is running." },
         {
@@ -302,19 +325,23 @@ print(cart1 == cart2)  # True, same owner, even though the carts hold different 
     }
 }
 
-Calculator calc = new Calculator();
-calc.add(2, 3);        // add(int, int)
-calc.add(2.5, 3.5);    // add(double, double)
-calc.add(1, 2, 3);     // add(int, int, int)`,
-          caption: "The compiler can tell which add to invoke from the number and types of the arguments. add(2, 3) is the int version, add(2.5, 3.5) is the double version, and add(1, 2, 3) is the three-int version. The binding is done at compile time, which is why this is called static polymorphism.",
+public class Main {
+    public static void main(String[] args) {
+        Calculator calc = new Calculator();
+        System.out.println(calc.add(2, 3));       // 5
+        System.out.println(calc.add(2.5, 3.5));   // 6.0
+        System.out.println(calc.add(1, 2, 3));    // 6
+    }
+}`,
+          caption: "The calls sit inside `main`, so the fragment compiles. The compiler picks which `add` to invoke from the number and types of the arguments. Printing the results shows that a different method body runs each time. The binding is done at compile time, which is why this is called static polymorphism.",
         },
         {
           type: "list",
           items: [
-            "Static polymorphism, also called compile-time polymorphism, can maximise code efficiency, particularly compared with dynamic polymorphism. Resolution happens at compile time, so it removes the run-time lookup and lets the compiler optimise the call. The run-time overhead of dynamic polymorphism is the extra time spent deciding which implementation to call.",
-            "Improved readability: the same function name can cover operations that are conceptually the same, instead of a different name for each version.",
-            "Ease of use: the compiler selects the version from the argument types, so the caller does not have to remember separate names.",
-            "Code organisation: related functionality stays under one identifier, which keeps the class less cluttered.",
+            "Efficiency: the method is chosen at compile time, so the running program skips the lookup that dynamic polymorphism needs, and the compiler can optimise the call.",
+            "One name for related operations: `add` covers ints, doubles and three-argument sums, instead of three separate names.",
+            "The compiler selects the version from the argument types, so the caller does not have to remember those names.",
+            "Related functionality stays under one identifier, which keeps the class less cluttered.",
           ],
         },
         { type: "callout", kind: "exam", label: "Exam watch", text: "Overriding is dynamic. The signature stays the same, the subclass supplies a new body, and the actual object decides which body runs. That decision is a lookup, and it happens at run time. Overloading is static. The name stays the same, the parameters differ, and the arguments decide which method runs, at compile time. The efficiency claim belongs to overloading, because the search is already finished before the program runs." },
@@ -340,11 +367,7 @@ calc.add(1, 2, 3);     // add(int, int, int)`,
             "Callers program against the abstract type, so a new concrete class does not ripple outwards.",
           ],
         },
-        { type: "p", text: "Abstraction means focusing on the essential features of an object while hiding unnecessary implementation detail. An abstract class describes what related subclasses must be able to do, without fully defining how every method works." },
-        { type: "p", text: "In Python, abstraction is commonly modelled with the `abc` module and abstract base classes. An abstract class cannot be instantiated until its abstract methods are implemented by a concrete subclass." },
-        { type: "p", text: "Modular programming designs software by breaking a program into distinct, interchangeable modules. Each module should be self-contained and should have what it needs to carry out one part of the program." },
-        { type: "p", text: "PaymentMethod and its subclasses form one module because they do the same job. The parent defines the abstract method `pay()`, and each concrete subclass must implement it. Callers can use the `pay()` interface without knowing how a particular payment works. A factory, in the patterns section, can choose the subclass, so the caller does not need to know which one was created. That makes the component easier to use and reduces complexity. The design can also grow: a new payment method can be added without changing the rest of the system, because the concrete classes stay separate from the code that uses them. Switching to a new payment method then needs only a small change." },
-        { type: "p", text: "Abstraction is a cornerstone of modular software. By hiding how a task is carried out, and exposing only the essential interface, it divides a complex system into independent pieces that can be worked on separately." },
+        { type: "p", text: "Abstraction means focusing on the essential features of an object while hiding unnecessary implementation detail. An abstract class describes what related subclasses must be able to do, without fully defining how every method works. In Python that is usually an abstract base class from the `abc` module: you cannot instantiate it until a concrete subclass implements every method marked `@abstractmethod`." },
         {
           type: "code",
           title: "The parent cannot be constructed. The children can.",
@@ -369,16 +392,39 @@ try:
     PaymentMethod()
 except TypeError as error:
     print(type(error).__name__)  # TypeError`,
-          caption: "`card.pay(20)` prints the card message. `PaymentMethod()` raises TypeError.",
+          caption: "`card.pay(20)` prints the card message. `PaymentMethod()` raises TypeError. A subclass that forgets `pay` is still abstract, and constructing it also fails.",
         },
-        { type: "p", text: "The abstract class `PaymentMethod` defines a common interface: every payment method must implement `pay()`. The rest of the program can work with the abstract idea of a payment method rather than with one concrete class. Adding a voucher payment means a new subclass, not a rewrite of the checkout." },
-        { type: "p", text: "In Python, ABC stands for abstract base class. The built-in `abc` module provides it. An ABC is a blueprint for other classes. It specifies methods and properties that a subclass must implement before it can be instantiated." },
+        {
+          type: "code",
+          lang: "Java",
+          title: "abstract class, interface, and @Override",
+          source: `abstract class PaymentMethod {
+    abstract void pay(double amount);
+}
+
+interface Refundable {
+    void refund(double amount);
+}
+
+class CardPayment extends PaymentMethod implements Refundable {
+    @Override
+    void pay(double amount) {
+        System.out.println("Paid " + amount + " by card");
+    }
+    @Override
+    public void refund(double amount) {
+        System.out.println("Refunded " + amount);
+    }
+}`,
+          caption: "An `abstract class` can mix concrete and abstract methods. An `interface` is a pure contract: every method is abstract unless marked otherwise. `implements` is realisation; that is where the UML `<<interface>>` stereotype belongs. `@Override` checks that `pay` and `refund` match the parent signatures.",
+        },
+        { type: "p", text: "The abstract class `PaymentMethod` defines a common interface: every payment method must implement `pay()`. Callers can use that interface without knowing how a particular payment works. Modular programming splits a system into interchangeable pieces; PaymentMethod and its subclasses form one such piece. A factory, in the patterns section, can choose the subclass so the caller never names it. Adding a voucher payment means a new subclass, not a rewrite of the checkout." },
         {
           type: "list",
           items: [
-            "Cannot be instantiated directly: you cannot create an object from an ABC. Trying to instantiate it raises TypeError. A subclass that forgets an abstract method is itself still abstract, and constructing it also fails.",
-            "Enforces method implementation: a subclass of an ABC must override every method marked with `@abstractmethod`.",
-            "Defines interfaces: it sets a contract across classes, so behaviour stays consistent. Every real payment method has `pay`, with the same arguments.",
+            "Cannot be instantiated directly: constructing an ABC, or a subclass that still has an abstract method, raises TypeError.",
+            "Enforces method implementation: a concrete subclass must override every `@abstractmethod`.",
+            "Defines a contract: every real payment method has `pay`, with the same arguments.",
           ],
         },
         { type: "callout", kind: "note", label: "Remember", text: "Abstraction and encapsulation are related, but they answer different questions. Encapsulation asks where the data lives, and who may change it. Abstraction asks what the caller needs to know in order to use the object. A caller that makes a payment needs the amount and the `pay` method. It does not need to know how the payment is stored." },
@@ -404,15 +450,7 @@ except TypeError as error:
             "Composition: the part is owned. It is usually created inside the whole, and it does not outlive it.",
           ],
         },
-        { type: "p", text: "Both composition and aggregation are has-a relationships between classes, but they are not equally strong." },
-        {
-          type: "list",
-          items: [
-            "Aggregation is a relationship in which the part can exist independently of the whole. It is a one-way association, and it is still a has-a relationship. A triangle has three sides, and each side is a line segment. A segment can belong to no triangle, to one triangle, or to several. Deleting one triangle does not delete the segment.",
-            "Composition is a relationship in which the part is strongly tied to the whole and usually does not meaningfully exist without it. If the whole is removed, its parts are typically removed too. On a diagram it is a binary association with a filled diamond at the whole. A folder could contain many files, while each file has exactly one folder. If the folder is deleted, the files are deleted as well. The no-sharing rule is the key to composition. A hospital has one or more departments, and each department belongs to exactly one hospital. If the hospital is closed, so are its departments.",
-          ],
-        },
-        { type: "p", text: "Aggregation means the parts can function independently of the aggregating class. In composition, the parts are tightly coupled and cannot exist outside the aggregating class." },
+        { type: "p", text: "Aggregation is a weak has-a: the part can exist on its own, and is usually passed into the whole. Composition is a strong part-of: the whole creates and owns the part, and the part is not meant to outlive it." },
         {
           type: "table",
           title: "The distinction the syllabus uses",
@@ -421,35 +459,8 @@ except TypeError as error:
             ["Relationship", "Weak has-a", "Strong part-of"],
             ["The part alone", "Can exist with no whole, or with another whole", "Does not meaningfully exist outside this whole"],
             ["Who creates it", "Usually outside, then passed in", "Usually the whole, inside its initialiser"],
-            ["If the whole is destroyed", "The parts remain", "The parts go with it"],
+            ["If the whole is destroyed", "The parts remain", "The parts go with it (as a design intent)"],
             ["UML", "Hollow diamond on the whole", "Filled diamond on the whole"],
-          ],
-        },
-        { type: "p", text: "The diagrams below use the same examples. The hollow diamond is aggregation: the segment can be shared. The filled diamond is composition: the file is not shared, and it goes when the folder goes." },
-        {
-          type: "uml",
-          w: 720,
-          h: 180,
-          caption: "Aggregation. The hollow diamond is on Triangle, the whole. A segment can belong to several triangles, so the multiplicity at Triangle is *. Each triangle has three sides.",
-          nodes: [
-            { id: "triangle", x: 36, y: 36, w: 200, name: "Triangle", attrs: [], ops: [] },
-            { id: "segment", x: 460, y: 36, w: 200, name: "Segment", attrs: [], ops: [] },
-          ],
-          edges: [
-            { from: "triangle", to: "segment", kind: "aggregate", fromMult: "*", toMult: "3", label: "sides" },
-          ],
-        },
-        {
-          type: "uml",
-          w: 720,
-          h: 180,
-          caption: "Composition. The filled diamond sits on the whole. A file belongs to one folder, and a folder contains many files. Deleting the folder deletes the files. A hospital and its departments follow the same pattern: a filled diamond on the hospital, with 1 at the hospital and 1..* at the department.",
-          nodes: [
-            { id: "folder", x: 36, y: 36, w: 200, name: "Folder", attrs: [], ops: [] },
-            { id: "file", x: 460, y: 36, w: 200, name: "File", attrs: [], ops: [] },
-          ],
-          edges: [
-            { from: "folder", to: "file", kind: "compose", fromMult: "1", toMult: "*", label: "files" },
           ],
         },
         {
@@ -474,13 +485,13 @@ team = Team("Firsts", [ada])
           type: "uml",
           w: 780,
           h: 210,
-          caption: "Hollow diamond on Team. One team, one or more players. The players are not owned.",
+          caption: "Hollow diamond on Team, the whole. Role name `players` sits on the line; do not also list `players` as an attribute. Multiplicity 1 and 1..*: one team, one or more players. Attribute visibility matches the public code.",
           nodes: [
-            { id: "player", x: 30, y: 48, w: 230, name: "Player", attrs: ["− name: str"], ops: [] },
-            { id: "team", x: 460, y: 28, w: 290, name: "Team", attrs: ["− name: str", "+ players: list"], ops: [] },
+            { id: "player", x: 30, y: 48, w: 230, name: "Player", attrs: ["+ name: str"], ops: [] },
+            { id: "team", x: 460, y: 28, w: 290, name: "Team", attrs: ["+ name: str"], ops: [] },
           ],
           edges: [
-            { from: "team", to: "player", kind: "aggregate", fromMult: "1", toMult: "1..*" },
+            { from: "team", to: "player", kind: "aggregate", fromMult: "1", toMult: "1..*", label: "players" },
           ],
         },
         {
@@ -493,62 +504,59 @@ team = Team("Firsts", [ada])
 class Car:
     def __init__(self, make: str):
         self.make = make
-        self.engine = Engine()
+        self._engine = Engine()
+
+    def start(self) -> None:
+        self._engine.start()
 
 car = Car("Toyota")
-car.engine.start()`,
-          caption: "`Engine()` runs inside `Car.__init__`, and `car.engine.start()` prints Engine started.",
+car.start()`,
+          caption: "`Engine()` runs inside `Car.__init__`. Keeping the part as `_engine` signals that nothing outside is meant to hold a reference. `car.start()` prints Engine started. Python uses garbage collection, so composition is a design intent: no one else is meant to keep the part alive. Assigning `c2._engine = c1._engine` would break that intent.",
         },
         { type: "p", text: "Here, the car creates and owns its engine. This is composition, because the engine is an internal part of the car. If the car was instead given an engine that another car might share, the relationship would be aggregation, even with the same class names." },
         {
           type: "uml",
           w: 780,
           h: 220,
-          caption: "Filled diamond on Car. The role name on the line is engine. Multiplicity 1 and 1: this car has this engine.",
+          caption: "Filled diamond on Car. The role name on the line is `engine`; it is not repeated as an attribute. Constructor written in UML form as `+ Car(make: str)`. Multiplicity 1 and 1: this car has this engine.",
           nodes: [
             { id: "engine", x: 24, y: 40, w: 250, name: "Engine", attrs: [], ops: ["+ start(): None"] },
-            { id: "car", x: 470, y: 24, w: 280, name: "Car", attrs: ["+ make: str", "− engine: Engine"], ops: ["+ __init__(make)"] },
+            { id: "car", x: 470, y: 24, w: 280, name: "Car", attrs: ["+ make: str"], ops: ["+ Car(make: str)", "+ start(): None"] },
           ],
           edges: [
             { from: "car", to: "engine", kind: "compose", fromMult: "1", toMult: "1", label: "engine" },
           ],
         },
-        { type: "h3", text: "Advantages of aggregation and composition" },
+        { type: "h3", text: "Advantages" },
         {
           type: "list",
           items: [
-            "Aggregation allows code to be reused. The code defined in the aggregated class can be reused in the aggregating class.",
-            "Aggregation allows a better organisation of the objects, because the variables and methods of the aggregated data stay in the class they belong to.",
+            "Aggregation reuses an independent class: Player logic stays in Player, and many teams can share the same player objects over time.",
+            "Composition keeps ownership clear: the car creates the engine, so the part's lifetime follows the whole.",
+            "Both keep each class focused. Engine methods stay on Engine; Car does not swallow them.",
           ],
         },
-        { type: "h3", text: "Disadvantages of aggregation and composition" },
+        { type: "h3", text: "Disadvantages" },
         {
           type: "list",
           items: [
-            "Using aggregation can make the calling code harder to follow, because you have to go through the part. `car.engine.start()` takes more reading than `car.start()`.",
-            "Aggregation increases dependencies. A change in one class can have an unexpected consequence for another class. A change to Engine can break Car.",
+            "Extra hops: `car.start()` may need to reach through `_engine`, which can make a call chain harder to follow than a single method on Car.",
+            "Dependencies: a change to Engine can break Car, even when the relationship is composition.",
+            "Aggregation needs care with shared parts: if two teams hold the same Player, a mutation is visible in both.",
           ],
         },
-        { type: "h3", text: "Why the distinction matters" },
-        { type: "p", text: "The distinction helps when you design object lifecycles and responsibilities. If a smaller object should be created, stored, and destroyed as part of a larger object, composition is often the clearer model. If the smaller object should continue to exist independently, aggregation is usually the better description." },
-        { type: "h3", text: "Summary" },
-        { type: "p", text: "Composition is the strong form, a part-of relationship:" },
+        { type: "h3", text: "Which relationship?" },
+        { type: "p", text: "The learning outcome asks you to choose. Ask two questions: is it is-a in ordinary language? If yes, inheritance. If it is has-a, can the part exist without this whole? If yes, aggregation (hollow diamond). If no, composition (filled diamond)." },
         {
-          type: "list",
-          items: [
-            "The whole creates the part.",
-            "The part cannot exist without the whole.",
-            "Lifetime is tied. The part is almost always created inside the composing object, because the whole controls the part's lifetime.",
-          ],
-        },
-        { type: "p", text: "Aggregation is the weak form, a has-a relationship:" },
-        {
-          type: "list",
-          items: [
-            "The whole receives the part from outside.",
-            "The part can exist independently.",
-            "The aggregate does not own the part.",
-            "Lifetime is not tied. The part is usually created outside the aggregating object, then passed in, because the part has an independent lifecycle.",
+          type: "table",
+          title: "Worked decisions",
+          head: ["Pair", "Relationship", "Why", "UML"],
+          rows: [
+            ["Dog–Animal", "Inheritance", "A dog is an animal", "Hollow triangle → Animal"],
+            ["Library–Book", "Aggregation", "A book exists before and after any one library catalogue", "Hollow diamond on Library"],
+            ["House–Room", "Composition", "A room of this house is not a meaningful object on its own", "Filled diamond on House"],
+            ["Course–Student", "Aggregation", "A student enrols in many courses and outlives any one of them", "Hollow diamond on Course"],
+            ["Car–Wheel", "Composition (typical)", "This car's wheels are fitted as its parts; sharing a wheel across cars is not the model", "Filled diamond on Car"],
           ],
         },
         { type: "callout", kind: "exam", label: "Exam watch", text: "A car is not a kind of engine, so inheritance is the wrong relationship. An is-a claim has to be true in ordinary language. Has-a splits in two: a hollow diamond when the parts are independent, and a filled diamond when the parts are owned. Draw the diamond on the whole, such as the team, the car, the folder, or the hospital." },
@@ -576,16 +584,7 @@ car.engine.start()`,
           ],
         },
         { type: "h3", text: "Singleton" },
-        { type: "p", text: "The singleton pattern ensures that a class has only one instance, and it provides a global point of access to that instance. It is used when several parts of an application need to share one coordinated resource or one central state." },
-        { type: "p", text: "That single shared access point is useful for shared configuration, logging setup, or an application-wide service. Every part of the program that asks for the object receives the same one." },
-        {
-          type: "list",
-          items: [
-            "Logging services: loggers write application events to one destination, such as a file. A singleton avoids competing writers producing out-of-order entries.",
-            "Application configuration and settings: app-wide properties, such as environment variables or feature flags, need to be loaded once at startup and read everywhere without parsing the files again.",
-          ],
-        },
-        { type: "p", text: "Singleton should be used carefully. A single shared object can make code harder to test and can introduce hidden global state. Tests start to depend on whatever the last test left in that object, and two parts of the program can interfere through it. Use it when one instance is a real constraint, not as a way to avoid passing arguments." },
+        { type: "p", text: "Problem: several parts of a program must share exactly one coordinated object, such as application settings or a logging destination." },
         {
           type: "code",
           title: "The second Settings() is the first Settings()",
@@ -611,46 +610,31 @@ second.theme = "light"
 print(first.theme)       # light`,
           caption: "`first is second` prints True. Setting `second.theme` to light changes `first.theme` as well.",
         },
-        { type: "p", text: "`__new__` decides whether to allocate. After the first call it returns the stored instance, so `__init__` would run again on the same object. The `_initialized` flag stops the second call from resetting `theme`. That guard matters in Python, because `__init__` is not skipped just because `__new__` reused an object." },
+        { type: "p", text: "How it works: `__new__` decides whether to allocate. After the first call it returns the stored instance, so `__init__` would run again on the same object. The `_initialized` flag stops the second call from resetting `theme`. That guard matters in Python, because `__init__` is not skipped just because `__new__` reused an object." },
+        { type: "p", text: "In everyday Python, a module-level object is the usual singleton: a module is imported only once, so `config = Settings()` at module scope, or the standard `logging` module, already gives one shared object. The `__new__` form is useful when a class must enforce the rule, but module-level state is what most Python programs actually use." },
+        {
+          type: "uml",
+          w: 420,
+          h: 200,
+          caption: "In UML a static member is underlined. Here `_instance` is the single shared reference. Every construction returns that same object.",
+          nodes: [
+            { id: "settings", x: 40, y: 20, w: 340, name: "Settings", attrs: [{ text: "+ _instance: Settings", static: true }, "+ theme: str"], ops: ["+ Settings()"] },
+          ],
+          edges: [],
+        },
+        { type: "p", text: "Primary uses: shared configuration loaded once at startup; a single logging destination and configuration for the whole process." },
         {
           type: "list",
           items: [
-            "Main idea: only one instance is created.",
-            "Typical use: shared settings, or a single service object.",
-            "Risk: hidden global state can reduce modularity.",
+            "Controlled access to one resource: one logger, one print spooler, one device handle.",
+            "One expensive setup: a configuration parse or connection is created once.",
+            "Lazy initialisation: the object can be created on first request rather than at startup.",
+            "One shared state: every module reads and writes the same data. That is the benefit, and it is also the risk.",
           ],
         },
-        { type: "h3", text: "Key benefits of a singleton" },
-        {
-          type: "list",
-          items: [
-            "Controlled access to one resource: it prevents conflicting access to something that can only handle one operation at a time, such as a logger, a print spooler, or a hardware device.",
-            "Memory and overhead: an expensive object, such as a configuration parser or a heavy connection, is created once rather than being created again and again.",
-            "Lazy initialisation: unlike a value that is created as soon as the program starts, a singleton can be created only when it is first requested.",
-            "One shared state: every module reads and writes the same data, such as runtime settings or an in-memory cache. That is the benefit, and it is also the risk.",
-          ],
-        },
+        { type: "p", text: "Risks: hidden global state makes tests depend on whatever the last test left behind, and two parts of the program can interfere through the same object. One shared logger gives one destination and one configuration; it does not by itself stop threads from interleaving lines. That needs a lock. Use a singleton when one instance is a real constraint, not as a way to avoid passing arguments." },
         { type: "h3", text: "Factory" },
-        { type: "p", text: "A factory centralises object creation. Instead of client code constructing every concrete class itself, one function or class decides which concrete object to create. This helps when the exact class depends on user input, configuration, or some other run-time condition. It also reduces coupling, because the rest of the program can work with a common interface rather than depending on many concrete classes." },
-        { type: "p", text: "Primary uses:" },
-        {
-          type: "list",
-          items: [
-            "Creating the object at run time: you do not know in advance exactly which class you will need. One example is choosing a payment gateway from what the user selected.",
-            "Encapsulating a complex setup: creating the object takes several steps, such as reading environment variables or preparing a database handle, before it can be used.",
-            "Decoupling frameworks and libraries: plugins can supply a custom implementation without modifying the core code.",
-          ],
-        },
-        { type: "p", text: "Key benefits:" },
-        {
-          type: "list",
-          items: [
-            "Loose coupling: client code depends on an abstract type, such as `BaseNotifier`, rather than on `EmailNotifier` or `SMSNotifier`. Changing an implementation does not break the caller.",
-            "Open/closed: a new product type, such as a WhatsApp notifier, can be added without editing the existing callers. You extend the factory, or register the new class.",
-            "Single responsibility: object creation lives in one place, so the business code is not full of initialisation.",
-            "Consistent object state: objects are fully configured before they reach the rest of the program.",
-          ],
-        },
+        { type: "p", text: "Problem: the caller should receive an object that implements a common interface, without naming or constructing the concrete class itself. The exact class often depends on a run-time value." },
         {
           type: "code",
           title: "The caller names a channel, not a class",
@@ -691,23 +675,17 @@ mail = NotifierFactory.get_notifier("email")
 mail.send("Your order has shipped")
 again = NotifierFactory.get_notifier("email")
 print(mail is again)  # False: a factory is not a singleton`,
-          caption: "Each call returns a new object, so `mail is again` prints False. A factory is not a singleton. An unknown channel fails inside the factory.",
+          caption: "Each call returns a new object, so `mail is again` prints False. A factory is not a singleton. An unknown channel fails inside the factory. `BaseNotifier` is the abstraction from B3.2.3, reused as the type the factory promises.",
         },
-        {
-          type: "list",
-          items: [
-            "Main idea: creation is separated from use.",
-            "Typical use: selecting one of several concrete classes at run time. `BaseNotifier` is the abstraction from B3.2.3, reused as the type the factory promises.",
-          ],
-        },
+        { type: "p", text: "How it works: the factory looks up a channel name in a dictionary of classes, constructs one, and returns it typed as `BaseNotifier`. Callers never import `EmailNotifier`." },
         {
           type: "uml",
           w: 980,
           h: 430,
-          caption: "The three notifiers inherit the `send` contract. The dashed arrow is a dependency: the factory creates a BaseNotifier, and the caller never mentions the concrete classes.",
+          caption: "`BaseNotifier` is an ABC, so the stereotype is `<<abstract>>`, matching Shape earlier. The three notifiers inherit `send`. The dashed arrow is a dependency: the factory creates a BaseNotifier. `<<factory>>` is a teaching label, not a standard UML stereotype.",
           nodes: [
-            { id: "base", x: 16, y: 16, w: 340, name: "BaseNotifier", stereo: "<<interface>>", attrs: [], ops: ["+ send(message: str)"] },
-            { id: "factory", x: 560, y: 16, w: 400, name: "NotifierFactory", stereo: "<<factory>>", attrs: ["− _notifiers"], ops: ["+ get_notifier(channel)"] },
+            { id: "base", x: 16, y: 16, w: 340, name: "BaseNotifier", stereo: "<<abstract>>", attrs: [], ops: ["+ send(message: str)"] },
+            { id: "factory", x: 560, y: 16, w: 400, name: "NotifierFactory", attrs: ["− _notifiers"], ops: ["+ get_notifier(channel)"] },
             { id: "email", x: 16, y: 250, w: 280, name: "EmailNotifier", attrs: [], ops: ["+ send(message: str)"] },
             { id: "sms", x: 330, y: 250, w: 280, name: "SMSNotifier", attrs: [], ops: ["+ send(message: str)"] },
             { id: "push", x: 644, y: 250, w: 300, name: "PushNotifier", attrs: [], ops: ["+ send(message: str)"] },
@@ -719,28 +697,20 @@ print(mail is again)  # False: a factory is not a singleton`,
             { from: "factory", to: "base", kind: "depend", label: "<<creates>>" },
           ],
         },
+        { type: "p", text: "Primary uses: choosing a payment gateway or notifier from user input; hiding a multi-step setup; letting plugins supply a class without editing the core." },
+        {
+          type: "list",
+          items: [
+            "Loose coupling: client code depends on `BaseNotifier`, not on Email or SMS.",
+            "Open/closed: a WhatsApp notifier can be registered without editing callers.",
+            "Single responsibility: creation lives in one place.",
+            "Consistent state: objects are fully configured before they leave the factory.",
+          ],
+        },
+        { type: "p", text: "Risks: an extra layer of indirection, and a growing `if` or dictionary to maintain whenever a new product type appears. A factory that becomes a god object for every construction in the program has gone too far." },
         { type: "lab", name: "patterns" },
         { type: "h3", text: "Observer" },
-        { type: "p", text: "Observer is used when one object needs to notify several other objects about a change in state. It supports event-driven thinking: one subject changes, and its observers react." },
-        { type: "p", text: "This is useful in interfaces, messaging systems, and applications where an update should be broadcast to several listeners without tightly coupling the classes. A weather station does not import the phone display and the television display and call them by class. Displays `attach` themselves. When the temperature changes, the station walks its list and calls `update` on each one." },
-        { type: "p", text: "Primary use cases:" },
-        {
-          type: "list",
-          items: [
-            "Event-driven systems and interfaces: interface components update when the underlying data changes, as in a model-view split where the view observes the model.",
-            "Real-time data feeds: one update is broadcast to many listeners, such as a stock ticker, a scoreboard, or a weather dashboard.",
-            "Notification and messaging: one event triggers several later actions. Placing an order can send an email, write an audit log, and update a dashboard.",
-          ],
-        },
-        { type: "p", text: "Key benefits:" },
-        {
-          type: "list",
-          items: [
-            "Loose coupling: the subject only knows that its observers implement a given interface. It does not need to know their concrete classes, their internal state, or how they work.",
-            "Dynamic relationships: observers can be attached or detached at run time, based on the state of the program or on what the user wants.",
-            "Broadcast: one operation sends the update to every subscriber, instead of a separate hand-written call for each dependent object.",
-          ],
-        },
+        { type: "p", text: "Problem: one object changes state, and several interested objects must react, without the subject importing every listener by concrete class." },
         {
           type: "code",
           title: "Attach, then wait for notify",
@@ -794,21 +764,45 @@ class TVDisplay(Observer):
 
 station = WeatherStation()
 phone = PhoneDisplay()
+tv = TVDisplay()
 station.attach(phone)
-station.attach(TVDisplay())
+station.attach(tv)
 station.set_temperature(21)
 station.detach(phone)
 station.set_temperature(18)  # the phone no longer prints`,
-          caption: "After both displays are attached, `set_temperature(21)` prints both. After the phone is detached, `set_temperature(18)` prints only the television.",
+          caption: "Both displays are kept in named variables, so either can be detached later. After both are attached, `set_temperature(21)` prints both. After the phone is detached, `set_temperature(18)` prints only the television. Calling `detach` on an observer that was never attached raises ValueError.",
         },
+        { type: "callout", kind: "exam", label: "Spot the problem", text: "`station.attach(TVDisplay())` with no saved reference attaches a display you can never detach later. `detach` on an observer that was never attached raises ValueError. Both are fair one-line exam traps." },
+        { type: "p", text: "How it works: displays attach themselves. When the temperature changes, the station walks its list and calls `update` on each one. The station does not import PhoneDisplay or TVDisplay." },
+        {
+          type: "uml",
+          w: 900,
+          h: 420,
+          caption: "Hollow diamond on WeatherStation towards Observer: the station aggregates listeners; it does not own them. WeatherStation realises Subject; PhoneDisplay and TVDisplay realise Observer. Inheritance arrows point at the abstract parents.",
+          nodes: [
+            { id: "subject", x: 40, y: 16, w: 280, name: "Subject", stereo: "<<abstract>>", attrs: [], ops: ["+ attach(o)", "+ detach(o)", "+ notify()"] },
+            { id: "observer", x: 560, y: 16, w: 280, name: "Observer", stereo: "<<abstract>>", attrs: [], ops: ["+ update(temp)"] },
+            { id: "station", x: 40, y: 240, w: 300, name: "WeatherStation", attrs: ["− _temperature: float"], ops: ["+ set_temperature(t)"] },
+            { id: "phone", x: 420, y: 250, w: 220, name: "PhoneDisplay", attrs: [], ops: ["+ update(temp)"] },
+            { id: "tv", x: 680, y: 250, w: 200, name: "TVDisplay", attrs: [], ops: ["+ update(temp)"] },
+          ],
+          edges: [
+            { from: "station", to: "subject", kind: "inherit" },
+            { from: "phone", to: "observer", kind: "inherit" },
+            { from: "tv", to: "observer", kind: "inherit" },
+            { from: "station", to: "observer", kind: "aggregate", fromMult: "1", toMult: "*", label: "observers" },
+          ],
+        },
+        { type: "p", text: "Primary uses: interface components that update when a model changes; real-time feeds such as a scoreboard; one event that triggers email, audit log and dashboard together." },
         {
           type: "list",
           items: [
-            "Main idea: observers subscribe, then receive updates when the subject changes.",
-            "Typical use: event systems, notifications, and interfaces.",
+            "Loose coupling: the subject only knows that observers implement `update`.",
+            "Dynamic relationships: attach or detach at run time.",
+            "Broadcast: one notify reaches every subscriber.",
           ],
         },
-        { type: "p", text: "The displays are created outside the station and can exist with no station attached. The station keeps a list of them. That list is aggregation: a hollow diamond on WeatherStation, towards Observer. The station does not own the displays, and it does not know which concrete classes are listening." },
+        { type: "p", text: "Risks: update chains that are hard to trace when one observer triggers another; memory leaks from observers that are attached and never detached. Keep a reference if you will need to detach later." },
         { type: "lab", name: "observer" },
         {
           type: "table",
@@ -828,13 +822,24 @@ station.set_temperature(18)  # the phone no longer prints`,
     {
       q: "Teacher(Person) calls super().__init__(name) before it sets self.subject. Why?",
       options: [
-        "`super` copies every Teacher method up into Person",
+        "It copies every Teacher method up into Person",
         "The parent initialiser sets the inherited state, here name, before the subclass adds its own",
         "Python requires `super` as the first statement of every method",
-        "It makes Teacher the parent of Person",
+        "Without `super`, Teacher would not be allowed to override `introduce`",
       ],
       answer: 1,
       why: "The subclass object includes the parent's part. super().__init__ runs Person's initialiser on this object. The inheritance arrow still points from Teacher to Person: Person is the parent.",
+    },
+    {
+      q: "In the access-modifier table, which row is correct for a subclass in another package?",
+      options: [
+        "It can read the parent's `private` members as `self.__private`",
+        "It can use `protected` members; it cannot use `private` members",
+        "It can use `default` (package) members from any package",
+        "Python's `__name` is visible to the subclass under the same spelling",
+      ],
+      answer: 1,
+      why: "protected is visible to subclasses even across packages. private is not. default is package-only. In Python, `__private` inside the child is looked up as `_Child__private`, not the parent's mangled name.",
     },
     {
       q: "print_area takes a Shape and calls shape.area(). A Circle is passed in. Which statement is correct?",
@@ -852,7 +857,7 @@ station.set_temperature(18)  # the phone no longer prints`,
       options: [
         "The method is chosen from the object at run time, so each call searches for an implementation",
         "The compiler chooses the method from the number and types of the arguments, so the running program does no lookup",
-        "All three calls run the same method body",
+        "Overloading is decided at run time, just like overriding",
         "Static polymorphism means the method was declared with the keyword `static`",
       ],
       answer: 1,
@@ -870,6 +875,17 @@ station.set_temperature(18)  # the phone no longer prints`,
       why: "An abstract class cannot be instantiated. Neither can a subclass that still has an abstract method left unimplemented. `CardPayment` has supplied `pay`, so it is concrete and can be constructed.",
     },
     {
+      q: "On a UML diagram, where does the diamond go for Team aggregating Player, and what does hollow versus filled mean?",
+      options: [
+        "The diamond goes on Player, the part; hollow means composition",
+        "The diamond goes on Team, the whole; hollow is aggregation, filled is composition",
+        "Both ends get a diamond; filled means the part can exist alone",
+        "Diamonds are only used for inheritance",
+      ],
+      answer: 1,
+      why: "Draw the diamond on the whole. Hollow means the parts are independent (aggregation). Filled means the parts are owned (composition). Inheritance uses a hollow triangle, not a diamond.",
+    },
+    {
       q: "A Team is given a list of Player objects that were constructed elsewhere. A Car constructs an Engine inside __init__. Which row is right?",
       options: [
         "Both are inheritance, because each class uses another class",
@@ -881,26 +897,64 @@ station.set_temperature(18)  # the phone no longer prints`,
       why: "Players can exist with no team, and they are passed in. That is aggregation, with a hollow diamond on Team. The engine is created by the car and treated as one of its parts. That is composition, with a filled diamond on Car. Both are has-a relationships. The lifetime of the part decides which one it is.",
     },
     {
+      q: "WeatherStation has phone and tv attached. set_temperature(21) runs, then phone is detached, then set_temperature(18) runs. What prints?",
+      options: [
+        "Both displays at 21, then both at 18",
+        "Both displays at 21, then only TV at 18",
+        "Only phone at 21, then only TV at 18",
+        "Nothing, because notify runs only once when the station is constructed",
+      ],
+      answer: 1,
+      why: "notify walks the current observer list. After the first reading both are attached. After detach(phone), only the television remains for the second reading.",
+    },
+    {
       q: "Which trace matches the three patterns?",
       options: [
         "Singleton returns a new object each call; factory always returns the same one; observer has no list",
         "Singleton returns the same object; factory returns a new object of a chosen class; observer calls `update` on each attached object",
         "All three return the same object",
-        "Observer is another name for inheritance",
+        "Factory and singleton are the same pattern under different names",
       ],
       answer: 1,
-      why: "Every `Settings()` call returns the one shared instance. `NotifierFactory.get_notifier` builds a new notifier, so a factory is not a singleton. `WeatherStation.notify` walks the observers that have been attached. Observer keeps a has-a list and calls back into it. It is not an is-a hierarchy, although the displays do inherit an Observer interface.",
+      why: "Every `Settings()` call returns the one shared instance. `NotifierFactory.get_notifier` builds a new notifier, so a factory is not a singleton. `WeatherStation.notify` walks the observers that have been attached. Observer keeps a has-a list and calls back into it.",
+    },
+  ],
+  tasks: [
+    {
+      kind: "draw",
+      prompt: "A School has many Classroom objects that it creates in its constructor. Each classroom belongs to that school alone. Draw the UML relationship: which class gets the diamond, and is it hollow or filled?",
+      reveal: "Filled diamond on School (composition). Multiplicity typically 1 on School and 1..* on Classroom. Do not also list `classrooms` as an attribute if the role name is on the line.",
+    },
+    {
+      kind: "spot",
+      prompt: "class Square(Rectangle) overrides set_width to also set height, so a square stays square. A function written for Rectangle doubles only the width. What goes wrong, and which relationship would be safer?",
+      reveal: "The function expects a rectangle whose width can change independently of height. Square breaks that assumption (a classic wrong is-a). Prefer composition: a Square has a side length, or has a Rectangle it controls, rather than claiming to be one.",
+    },
+    {
+      kind: "spot",
+      prompt: "A subclass forgets to implement PaymentMethod.pay. What happens on CardPayment() if CardPayment is that subclass? What happens on PaymentMethod()?",
+      reveal: "Both raise TypeError. A class with an unimplemented abstract method is still abstract, so it cannot be constructed. The parent ABC also cannot be constructed.",
+    },
+    {
+      kind: "exam",
+      prompt: "Evaluate the use of inheritance in the design of a graphics application where Circle, Rectangle and Triangle all provide area() and draw(). [6 marks]",
+      reveal: "Award up to 6 for balanced evaluation, for example: (AO1/2) inheritance models is-a and lets Shape declare a shared interface; subclasses reuse shared code and override area/draw; (AO3 benefit) print_area or a draw loop need not change when a new shape is added; (AO3 benefit) common fixes live in one parent; (AO3 limit) a fragile base class can break every shape; (AO3 limit) deep hierarchies are hard to follow; (AO3 alternative) composition may fit better if a shape is built from other shapes rather than specialising one. Name both sides for full marks.",
+    },
+    {
+      kind: "exam",
+      prompt: "A weather app must update a phone widget, a desktop window and a log file whenever the temperature changes. Identify a suitable design pattern, outline how the classes collaborate, and state one risk. [6 marks]",
+      reveal: "Observer / subject–observer. WeatherStation (subject) keeps a list of Observer objects; PhoneWidget, DesktopWindow and TempLog each implement update; attach/detach manage the list; set_temperature updates state and calls notify. Risk: observers never detached (leaks), or update chains that are hard to trace. Credit a clear UML description: hollow diamond on the station towards Observer.",
     },
   ],
   checks: [
     "Draw an is-a hierarchy and write the subclass, including super().__init__ and an override that calls super().",
     "State, for `public`, `protected`, `default` and `private`, whether a subclass may use the member.",
     "Explain Python's version: plain names, _names, and __names mangled with the class name.",
+    "Give one advantage and one disadvantage of inheritance, including fragile base class or composition-over-inheritance.",
     "Write a polymorphic call that works for two subclasses, and say when the method body is chosen.",
-    "Distinguish overriding from overloading, and explain why static polymorphism can be more efficient.",
-    "Say what __str__, __repr__, __len__ and __eq__ are for.",
+    "Distinguish overriding from overloading, and explain why Python operator overloading is still run-time.",
     "Explain why an abstract class cannot be instantiated, and what a subclass must do.",
     "Choose aggregation or composition for a new pair of classes, and draw the right diamond on the whole.",
-    "Describe singleton, factory and observer by the problem each one solves, and by what a second call returns.",
+    "Describe singleton, factory and observer by the problem each one solves, one risk each, and what a second call returns.",
   ],
 };
