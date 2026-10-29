@@ -253,6 +253,10 @@ function renderBlock(item) {
     const paragraph = el("p", "more");
     const link = el("a", "btn ghost small", item.label);
     link.href = item.href;
+    if (item.external) {
+      link.target = "_blank";
+      link.rel = "noopener";
+    }
     paragraph.append(link);
     return paragraph;
   }

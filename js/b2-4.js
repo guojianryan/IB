@@ -9,7 +9,7 @@ export const topic = {
   map: [
     ["#efficiency", "B2.4.1", "Efficiency and Big O", "Time and space as the input grows, and choosing an algorithm because of that growth."],
     ["#search", "B2.4.2", "Linear and binary search", "Find a value by checking each item, or by halving a sorted list."],
-    ["#sort", "B2.4.3", "Bubble sort and selection sort", "Two O(n²) sorts, and what each one spends its work on."],
+    ["#sort", "B2.4.3", "Bubble sort and selection sort", "Bubble sort stops when a pass swaps nothing. Selection sort always finishes its passes."],
     ["#recursion", "B2.4.4 · HL", "Recursion", "A base case, a smaller call, and where recursion helps or costs too much."],
     ["#trace", "B2.4.5 · HL", "Trace a recursive algorithm", "Simple algorithms with one recursive call, traced call by call."],
   ],
@@ -42,8 +42,8 @@ export const topic = {
           rows: [
             ["O(1)", "A fixed amount of work", "Reading one index. peek on a stack"],
             ["O(log n)", "The remaining problem is halved", "Binary search on a sorted list"],
-            ["O(n)", "One pass through the items", "Linear search"],
-            ["O(n²)", "A loop nested inside a loop over the items", "Bubble sort and selection sort"],
+            ["O(n)", "One pass through the items", "Linear search. Bubble sort, when a pass makes no swap and it stops"],
+            ["O(n²)", "A loop nested inside a loop over the items", "Selection sort. Bubble sort, when later passes still have swaps"],
           ],
         },
         { type: "p", text: "Space is counted the same way, for the extra memory beyond the input itself. A handful of index variables is O(1) extra space. A second list that holds a copy of every item is O(n) extra space. The sorts on this page rearrange the list they are given, so their extra space is O(1). The searches only remember a few indexes, so their extra space is also O(1)." },
@@ -85,6 +85,8 @@ print(linear_search(names, "Ali"))  # 2
 print(linear_search(names, "Jo"))   # -1`,
           caption: "The loop looks at index 0, then 1, then 2. Ali matches at index 2, so the function returns immediately. Jo matches nothing, so the function returns −1 after the loop. Time is O(n). Extra space is O(1).",
         },
+        { type: "p", text: "The simulation scans the list one item at a time. You can step forward and back, and watch the comparison that accepts or rejects each item." },
+        { type: "more", external: true, href: "https://guojianryan.github.io/CompSimu/simulations/linear-search/index.html", label: "Linear search on CompSimu" },
         { type: "p", text: "Binary search keeps a low index and a high index. The range still to be searched runs from low to high inclusive. The middle index is `(low + high) // 2`. Integer division is required: the index has to be a whole number. If the middle item is too small, the target can only be to the right, so low becomes mid + 1. If the middle item is too large, high becomes mid − 1. If low passes high, the target is not in the list." },
         {
           type: "code",
@@ -117,6 +119,8 @@ print(binary_search(values, 7))   # -1`,
             ["4", "4", "4", "16", "Equal, so return 4"],
           ],
         },
+        { type: "p", text: "The simulation moves low, mid and high in the same way as the trace table." },
+        { type: "more", external: true, href: "https://guojianryan.github.io/CompSimu/simulations/binary-search/index.html", label: "Binary search on CompSimu" },
         { type: "p", text: "Use a linear search when the data is unsorted, or when n is so small that the simpler loop is the clearer program. Use a binary search when the data is kept sorted and n is large enough for halving to matter. A directory of names, kept in order, is a binary search if you have the name and want the phone number. Searching that same directory by the phone number is a linear search, unless a second structure is sorted by number. Running binary search on the unsorted number order can return −1 for a number that is present, or return the wrong index. The algorithm assumes the order. It does not check it." },
         { type: "callout", kind: "exam", label: "Exam watch", text: "Say sorted or unsorted before you name the search. A trace of binary search needs a row for low, high and mid. The answer is the index, unless the question asks for the value. −1 means not found. It is not a position in the list." },
       ],
@@ -126,7 +130,7 @@ print(binary_search(values, 7))   # -1`,
       nav: "Sort",
       kicker: "B2.4.3 · Construct and trace bubble sort and selection sort",
       title: "Two ways to put a list in order",
-      lede: "Bubble sort repeatedly swaps neighbours that are out of order. Selection sort repeatedly finds the smallest remaining item and places it in its final position. Both are O(n²) in time and O(1) in extra space.",
+      lede: "Bubble sort swaps neighbours that are out of order, and stops when a pass makes no swap. Selection sort finds the smallest remaining item and places it in its final position. Both use O(1) extra space. Selection sort takes O(n²) time. Bubble sort takes O(n²) time in the worst case, and O(n) time when it finds the list already sorted.",
       blocks: [
         {
           type: "pair",
@@ -137,25 +141,33 @@ print(binary_search(values, 7))   # -1`,
           ],
           notes: [
             "These versions rearrange the list they are given.",
-            "Bubble sort swaps neighbours. Selection sort swaps once per pass.",
+            "Bubble sort swaps neighbours, and stops when a pass swaps nothing.",
             "Neither needs the list to be sorted already. Both leave it sorted.",
           ],
         },
-        { type: "p", text: "Bubble sort walks along the list comparing each pair of neighbours. When a pair is out of order, the two items are swapped. After the first pass, the largest item has bubbled to the end. The next pass can stop one item earlier, because that end item is already in place. With n items there are n − 1 passes, and the passes themselves get shorter. The number of comparisons is about n² / 2, which is O(n²), including when the list was already sorted. This version does not stop early." },
+        { type: "p", text: "Bubble sort walks along the list comparing each pair of neighbours. When a pair is out of order, the two items are swapped. After the first pass, the largest item has bubbled to the end, so the next pass can stop one item earlier. A flag records whether the current pass swapped anything. If the flag is still false at the end of a pass, the list is sorted, and the algorithm stops. It does not run the remaining passes." },
+        { type: "p", text: "On a reversed list the flag stays true for many passes, and the time is O(n²). On a list that is already sorted, the first pass makes no swap and the sort stops after that one pass. That best case is O(n). The same stop happens in the middle of a sort: once any pass swaps nothing, the items that remain are in order." },
         {
           type: "code",
-          title: "Bubble sort",
+          title: "Bubble sort stops when a pass swaps nothing",
           source: `def bubble_sort(items):
     n = len(items)
+    passes = 0
     for pass_num in range(n - 1):
+        swapped = False
+        passes = passes + 1
         for i in range(n - 1 - pass_num):
             if items[i] > items[i + 1]:
                 items[i], items[i + 1] = items[i + 1], items[i]
-    return items
+                swapped = True
+        if not swapped:
+            break
+    return items, passes
 
-data = [4, 2, 5, 1]
-print(bubble_sort(data))  # [1, 2, 4, 5]`,
-          caption: "Each comparison looks at one pair of neighbours. The extra memory is a few integers, so the extra space is O(1). The nested loops make the time O(n²).",
+print(bubble_sort([4, 2, 5, 1]))  # ([1, 2, 4, 5], 3)
+print(bubble_sort([2, 1, 3, 4]))  # ([1, 2, 3, 4], 2)
+print(bubble_sort([1, 2, 4, 5]))  # ([1, 2, 4, 5], 1)`,
+          caption: "The second value is the number of passes. [4, 2, 5, 1] swaps on every pass, so it uses all three. [2, 1, 3, 4] is sorted after the first pass, so the second pass swaps nothing and the sort stops. [1, 2, 4, 5] stops after one pass. Extra space is still O(1).",
         },
         {
           type: "table",
@@ -168,7 +180,10 @@ print(bubble_sort(data))  # [1, 2, 4, 5]`,
             ["Pass 3", "1, 2, 4, 5", "2 and 1 swapped"],
           ],
         },
-        { type: "p", text: "Selection sort also uses a loop inside a loop, so its time is O(n²) as well, and it does those comparisons even when the list is sorted. The inner loop only searches. It remembers the index of the smallest item from the unsorted part. The outer loop then swaps that item into position i, at most once per pass. The extra space is O(1)." },
+        { type: "p", text: "Every pass in that trace swapped, so the flag did not stop it early. The second and third calls in the listing stop before the last possible pass." },
+        { type: "p", text: "The simulation uses the same swapped flag, and it stops when a pass changes nothing." },
+        { type: "more", external: true, href: "https://guojianryan.github.io/CompSimu/simulations/bubble-sort/index.html", label: "Bubble sort on CompSimu" },
+        { type: "p", text: "Selection sort also uses a loop inside a loop, so its time is O(n²), including when the list is already sorted. It has no flag that can end the sort early. The inner loop only searches. It remembers the index of the smallest item from the unsorted part. The outer loop then swaps that item into position i, at most once per pass. The extra space is O(1)." },
         {
           type: "code",
           title: "Selection sort",
@@ -196,8 +211,10 @@ print(selection_sort(data))  # [1, 2, 4, 5]`,
             ["2", "3, the value 4", "1, 2, 4, 5"],
           ],
         },
-        { type: "p", text: "On time, the two algorithms are the same class. The practical difference is the swaps. Bubble sort can swap on every comparison, so a reversed list swaps a lot. Selection sort swaps at most once per pass, which matters if writing an item is expensive. Bubble sort is the easier one to trace, because each change is a neighbour swap. Selection sort is the one to choose when you want few writes and you still accept an O(n²) number of comparisons. For a large list, both lose to an algorithm whose time grows more slowly. Quicksort, in the HL section, is one of those." },
-        { type: "callout", kind: "exam", label: "Exam watch", text: "Do not give both algorithms O(n) because each pass looks shorter. The passes still add up to a multiple of n². Extra space is O(1) for these in-place versions. A version that first copies the list into a new list spends O(n) extra space on that copy." },
+        { type: "p", text: "The simulation finds the minimum of the unsorted part, then swaps it into place on the left." },
+        { type: "more", external: true, href: "https://guojianryan.github.io/CompSimu/simulations/selection-sort/index.html", label: "Selection sort on CompSimu" },
+        { type: "p", text: "The practical difference is the swaps, and bubble sort's early stop. Bubble sort can swap on every comparison, so a reversed list swaps a lot and still takes O(n²) time. Selection sort swaps at most once per pass, which matters if writing an item is expensive, and it still scans every remaining item when the list is sorted. Bubble sort is the easier one to trace, because each change is a neighbour swap. For a large list that is not already sorted, both lose to an algorithm whose time grows more slowly. Quicksort, in the HL section, is one of those." },
+        { type: "callout", kind: "exam", label: "Exam watch", text: "Selection sort stays O(n²) even on a sorted list, because the shorter passes still add up to a multiple of n². Bubble sort is O(n²) in the worst case. It is O(n) only when a pass makes no swap and the sort stops. Extra space is O(1) for these in-place versions. A version that first copies the list into a new list spends O(n) extra space on that copy." },
       ],
     },
     {
