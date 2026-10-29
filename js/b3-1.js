@@ -448,6 +448,7 @@ print(book1 == "1984")  # False, not a Book`,
           caption: "The isinstance check matters. Without it, comparing a book with a string can raise AttributeError when the method tries to read other.isbn. Returning `False` is the safe answer for a different type.",
         },
         { type: "callout", kind: "exam", label: "Exam watch", text: "== and `is` are not interchangeable. == uses __eq__ when it exists, so two objects can compare equal by value. `is` asks whether both names point at one object. A question about object references is almost always an `is` question. A question about logical equality is an == question." },
+        { type: "callout", kind: "note", label: "Remember", text: "Defining `__eq__` without `__hash__` makes instances unhashable: they cannot go in a set or be used as dict keys. That is usually what you want for mutable objects such as a Book you might edit, or a ShoppingCart in B3.2. If you need hashing, define `__hash__` from the same fields `__eq__` uses, and do not mutate those fields afterwards." },
       ],
     },
     {
