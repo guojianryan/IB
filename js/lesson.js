@@ -162,6 +162,10 @@ export function renderTopic(topic) {
   if (topic.mcqs?.length) main.append(practice(topic));
   if (topic.checks?.length) main.append(review(topic));
   watchNav();
+  if (location.hash.length > 1) {
+    const id = decodeURIComponent(location.hash.slice(1));
+    document.getElementById(id)?.scrollIntoView({ behavior: "instant", block: "start" });
+  }
 }
 
 function hero(topic) {
