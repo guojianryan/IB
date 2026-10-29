@@ -193,7 +193,7 @@ print(updated)  # bat`,
             "finally runs whether the try succeeded or failed.",
           ],
         },
-        { type: "p", text: "Three kinds of failure belong in an answer:" },
+        { type: "h3", text: "Three kinds of failure" },
         {
           type: "list",
           items: [

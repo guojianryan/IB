@@ -335,6 +335,7 @@ public class Main {
 }`,
           caption: "The calls sit inside `main`, so the fragment compiles. The compiler picks which `add` to invoke from the number and types of the arguments. Printing the results shows that a different method body runs each time. The binding is done at compile time, which is why this is called static polymorphism.",
         },
+        { type: "h3", text: "Advantages of overloading" },
         {
           type: "list",
           items: [
@@ -420,6 +421,7 @@ class CardPayment extends PaymentMethod implements Refundable {
           caption: "An `abstract class` can mix concrete and abstract methods. An `interface` is a pure contract: every method is abstract unless marked otherwise. `implements` is realisation; that is where the UML `<<interface>>` stereotype belongs. `@Override` checks that `pay` and `refund` match the parent signatures.",
         },
         { type: "p", text: "The abstract class `PaymentMethod` defines a common interface: every payment method must implement `pay()`. Callers can use that interface without knowing how a particular payment works. Modular programming splits a system into interchangeable pieces; PaymentMethod and its subclasses form one such piece. A factory, in the patterns section, can choose the subclass so the caller never names it. Adding a voucher payment means a new subclass, not a rewrite of the checkout." },
+        { type: "h3", text: "What an abstract class provides" },
         {
           type: "list",
           items: [
@@ -641,6 +643,7 @@ print(first.theme)       # light`,
           edges: [],
         },
         { type: "p", text: "Primary uses: shared configuration loaded once at startup; a single logging destination and configuration for the whole process." },
+        { type: "h3", text: "Advantages of a singleton" },
         {
           type: "list",
           items: [
@@ -716,6 +719,7 @@ print(mail is again)  # False: a factory is not a singleton`,
           ],
         },
         { type: "p", text: "Primary uses: choosing a payment gateway or notifier from user input; hiding a multi-step setup; letting plugins supply a class without editing the core." },
+        { type: "h3", text: "Advantages of a factory" },
         {
           type: "list",
           items: [
@@ -812,6 +816,7 @@ station.set_temperature(18)  # the phone no longer prints`,
           ],
         },
         { type: "p", text: "Primary uses: interface components that update when a model changes; real-time feeds such as a scoreboard; one event that triggers email, audit log and dashboard together." },
+        { type: "h3", text: "Advantages of the observer" },
         {
           type: "list",
           items: [

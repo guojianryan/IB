@@ -69,8 +69,7 @@ print(s._Secret__code)  # 1234`,
         { type: "h3", text: "Why OOP can help" },
         { type: "p", text: "OOP is often a strong choice when a problem involves several real-world entities with different responsibilities. A library system can be broken into Book, Member, and Loan objects. A game can be broken into Player, Enemy, and Item objects. An online shop can be broken into Product, Cart, and Order objects." },
         { type: "p", text: "By giving each class a clear role, the program becomes easier to reason about. Changes in one part of the system can often be made inside one class instead of being scattered across unrelated code." },
-        { type: "h3", text: "Advantages and disadvantages" },
-        { type: "p", text: "Advantages:" },
+        { type: "h3", text: "Advantages" },
         {
           type: "list",
           items: [
@@ -79,7 +78,7 @@ print(s._Secret__code)  # 1234`,
             "Quicker to test: each module is small and independent, and can therefore be tested separately.",
           ],
         },
-        { type: "p", text: "Disadvantages:" },
+        { type: "h3", text: "Disadvantages" },
         {
           type: "list",
           items: [
@@ -88,8 +87,8 @@ print(s._Secret__code)  # 1234`,
             "Effort: an object-oriented program takes planning before the first line of code is written.",
           ],
         },
-        { type: "h3", text: "When OOP is the wrong tool" },
         { type: "p", text: "B3.1.1 asks you to name a problem where OOP is a poor fit. These three are the useful cases." },
+        { type: "h3", text: "When OOP is the wrong tool" },
         {
           type: "list",
           items: [
@@ -100,6 +99,7 @@ print(s._Secret__code)  # 1234`,
         },
         { type: "h3", text: "A model evaluate answer" },
         { type: "p", text: "Question: Evaluate the use of object-oriented programming for a program that converts a folder of CSV files into one summary table. [4]" },
+        { type: "h3", text: "Points in the answer" },
         {
           type: "list",
           items: [
@@ -470,8 +470,8 @@ parsed = Date.from_string("2026-05-07")`,
         { type: "h3", text: "Constructor" },
         { type: "p", text: "A constructor runs when a new object is created, and it sets that object's starting state. In Python the method is `__init__`." },
         { type: "p", text: "Python has one `__init__`. Another way to build the same kind of object is a class method that prepares the arguments and then calls `cls(...)`. `Date.from_string` in B3.1.4 is that method, and the Java listing there shows the overloaded constructors Python cannot write." },
-        { type: "h3", text: "Getters and setters" },
         { type: "p", text: "Getters and setters, also known as accessors and mutators, are public methods used to access and update private attributes safely. That is one way encapsulation is written." },
+        { type: "h3", text: "Getters and setters" },
         {
           type: "list",
           items: [
@@ -534,8 +534,8 @@ except ValueError as error:
           caption: "Same protection, with the method call written out. The getter is called with parentheses. The setter is passed the new value.",
         },
         { type: "p", text: "You must know both ways to define getters and setters. The property style is the usual Python. The `get_` and `set_` style is what a question written in Java vocabulary is often expecting you to recognise." },
-        { type: "h3", text: "__str__ and __eq__" },
         { type: "p", text: "Both `__str__` and `__eq__` are special dunder (double underscore) methods. They customise how objects behave with built-in functions and operators." },
+        { type: "h3", text: "__str__ and __eq__" },
         {
           type: "list",
           items: [
@@ -618,7 +618,7 @@ print(acc2.balance)   # 700`,
       title: "Wrap the data, and hide the mechanism",
       lede: "Encapsulation and information hiding both help you build code that can change without breaking. They are related but not the same. Encapsulation is a mechanism: you bundle data with the code that works on it. Information hiding is a design goal: you keep the decisions most likely to change behind a stable interface.",
       blocks: [
-        { type: "p", text: "By the end of this section you should be able to:" },
+        { type: "h3", text: "You should be able to" },
         {
           type: "list",
           items: [
@@ -630,7 +630,6 @@ print(acc2.balance)   # 700`,
         { type: "h3", text: "Encapsulation" },
         { type: "p", text: "Encapsulation means putting data and the functions that operate on it into one unit, usually a class, and controlling how outside code reaches that data. Its main job is to protect invariants: rules the object must always obey." },
         { type: "h3", text: "Advantages of encapsulation" },
-        { type: "p", text: "There are several benefits of using encapsulation in programming." },
         {
           type: "list",
           items: [
@@ -640,7 +639,7 @@ print(acc2.balance)   # 700`,
             "Lastly, encapsulation can speed up development. Different programmers can work independently on different classes. Because the internal workings of each class are hidden, they can work on several classes at the same time without interfering with each other's work.",
           ],
         },
-        { type: "p", text: "Encapsulation is implemented with:" },
+        { type: "h3", text: "How encapsulation is implemented" },
         {
           type: "list",
           items: [
