@@ -50,7 +50,7 @@ export const topic = {
     },
     {
       id: "product",
-      nav: "Product",
+      nav: "Build",
       kicker: "The product",
       title: "Build what Criterion C described",
       lede: "The product is the completed software. Fully functional means it performs as the system overview and success criteria required, not that every stretch goal you imagined on day one shipped.",

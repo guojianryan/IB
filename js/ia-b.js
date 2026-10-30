@@ -7,7 +7,7 @@ export const topic = {
   mapTitle: "What Criterion B asks",
   mapLede: "Two constructions: a reasonable decomposition of the problem, and a plan that addresses the success criteria.",
   map: [
-    ["#product", "B.1", "Product decomposition", "Modules or components, each tied to success criteria."],
+    ["#product", "B.1", "Decomposing the product", "Modules or components, each tied to success criteria."],
     ["#tasks", "B.2", "Task decomposition", "Ordered work across planning, design, development, testing and evaluation."],
     ["#plan", "B.3", "The plan", "Chronology, estimates, and research such as libraries you will use."],
   ],
@@ -47,10 +47,10 @@ export const topic = {
     },
     {
       id: "product",
-      nav: "Product",
-      kicker: "Product decomposition",
+      nav: "Parts",
+      kicker: "Decomposing the product",
       title: "What the system is made of",
-      lede: "Product decomposition splits a complex product into subsystems, modules or components so you can design, analyse and build them. It is how you manage complexity and see the interactions.",
+      lede: "Decomposing the product means splitting a complex system into subsystems, modules or components so you can design, analyse and build them. It is how you manage complexity and see the interactions.",
       blocks: [
         {
           type: "list",
@@ -71,7 +71,7 @@ export const topic = {
             "A short bulleted list of components with one-line descriptions, if a diagram needs a key.",
           ],
         },
-        { type: "callout", kind: "note", label: "Source", text: "The requirement to decompose the problem scenario into components comes from the guide. The product-decomposition checklist and suggested diagram types are from class IA notes expanding that requirement." },
+        { type: "callout", kind: "note", label: "Source", text: "The requirement to decompose the problem scenario into components comes from the guide. The checklist and suggested diagram types are from class IA notes expanding that requirement." },
       ],
     },
     {
@@ -85,8 +85,8 @@ export const topic = {
           type: "list",
           items: [
             "Cover all five stages: planning, designing, developing, testing, evaluation.",
-            "Assign tasks for the design, development and testing of each component from the product decomposition.",
-            "Order the tasks so dependencies make sense.",
+            "Assign tasks for the design, development and testing of each component from the earlier decomposition.",
+            "Sequence the tasks so dependencies make sense.",
             "Estimate the time each task needs.",
           ],
         },
@@ -108,7 +108,7 @@ export const topic = {
           rows: [
             ["Coverage", "Every success criterion appears in at least one design, build or test task"],
             ["Components", "Every component from the decomposition has design and test work"],
-            ["Order", "Blocked work is not scheduled before its dependencies"],
+            ["Sequence", "Blocked work is not scheduled before its dependencies"],
             ["Research", "Libraries or tools you will use are named where they affect the schedule"],
             ["Realism", "Estimates fit the 35-hour recommendation and your actual access to hardware or data"],
           ],

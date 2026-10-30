@@ -206,7 +206,8 @@ function syllabusMap(topic) {
     const cardLink = el("a", "map-card");
     cardLink.href = href;
     cardLink.append(el("span", "", code));
-    cardLink.append(richEl("h3", "", title));
+    // Plain title: class-name auto-highlight must not turn ordinary words like Product into code.
+    cardLink.append(el("h3", "", title));
     cardLink.append(richEl("p", "", text));
     grid.append(cardLink);
   });

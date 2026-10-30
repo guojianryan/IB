@@ -30,7 +30,7 @@ export const topic = {
           ],
           notes: [
             "SL: 30% of the course. HL: 20%. Recommended teaching time: 35 hours.",
-            "Solution means the documentation plus the video. Product means the software alone.",
+            "Solution means the documentation plus the video. The product means the software alone.",
             "The same criteria are used at both levels. The total is 30 marks.",
           ],
         },
@@ -39,7 +39,7 @@ export const topic = {
         {
           type: "table",
           title: "Three files",
-          head: ["File", "Form", "Rule"],
+          head: ["Deliverable", "Form", "Rule"],
           rows: [
             ["Documentation", "One PDF", "Five sections, one per criterion. At most 2,000 words. Code excerpts, comments and diagrams do not count. Write the word count on the first page."],
             ["Video", "Separate file", "At most five minutes. Show full functionality and examples of the testing strategy. Common formats such as mp4, avi or wmv."],
@@ -136,7 +136,7 @@ export const topic = {
           items: [
             "International Baccalaureate. Diploma Programme Computer science guide. First assessment 2027. Internal assessment: the computational solution (purpose, time allocation, requirements, assessment criteria and clarifications).",
             "International Baccalaureate. Computer science teacher support material (referenced in class IA notes for further examples of complex and innovative solutions).",
-            "Class IA notes (Google Doc): Introduction to the IB Computer Science Internal Assessment, including practical checklists for Criteria A and B and the 80% problem-choice rule. Those notes also cite Paul Baumgarten, IB IA Student Guide 2027.",
+            "Class IA notes (Google Doc): Introduction to the IB Computer Science Internal Assessment, including practical checklists for Criteria A and B and the 80% problem-choice rule. Those notes also cite Paul Baumgarten, IB IA student guide 2027.",
           ],
         },
         { type: "p", text: "On every criterion page, tables labelled as level descriptors, and callouts labelled Source, follow the guide wording. Practical checklists and example success criteria are teaching material built on top of that." },
