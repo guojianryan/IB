@@ -83,7 +83,7 @@ export const topic = {
             "List 8 to 10 measurable success criteria.",
             "Ensure each criterion is clear, substantial, specific, testable, and relevant to your solution.",
             "The set of criteria, when taken as a whole, should describe what a successful product must achieve.",
-            "Avoid subjective criteria such as \"user-friendly GUI\" or \"aesthetically pleasing\". If User Interface (UI) is a criterion, it must be clearly measurable with evidence.",
+            "Avoid subjective criteria such as \"user-friendly GUI\" or \"aesthetically pleasing\". If a user-interface (UI) criterion is included, it must be clearly measurable with evidence.",
             "Word your criteria precisely, relating directly to the required functionalities of your computational solution.",
             "Remember that these success criteria will be used in planning (Criterion B), development (Criterion D), and evaluation (Criterion E).",
             "Success criteria are not included in the total word count.",
