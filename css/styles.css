@@ -965,9 +965,15 @@ table.sheet th, table.sheet td { border-bottom: 1px solid var(--line); padding: 
 .more { margin-top: 12px; }
 
 .more.prominent .btn {
-  padding: 12px 20px;
-  font-size: 1.05rem;
-  box-shadow: none;
+  padding: 14px 22px;
+  font-size: 1.08rem;
+  gap: 10px;
+  box-shadow: 0 0 0 1px var(--teal), 0 0 0 5px rgba(0, 217, 146, 0.16);
+}
+
+.more.prominent .btn:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 0 0 1px var(--teal), 0 0 0 6px rgba(0, 217, 146, 0.28);
 }
 
 .more.prominent .btn::after {
