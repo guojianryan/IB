@@ -76,17 +76,20 @@ export const topic = {
       title: "Eight to ten outcomes you can test",
       lede: "Success criteria are measurable outcomes derived from the solution requirements. Taken together, they describe what a successful product must achieve.",
       blocks: [
+        { type: "h3", text: "Success criteria checklist" },
         {
           type: "list",
           items: [
-            "Aim for about 8 to 10 criteria.",
-            "Each one should be clear, substantial, specific, testable and relevant.",
-            "Word them as required functionalities of the product, not as hopes about how it feels.",
-            "Avoid subjective lines such as \"user-friendly GUI\" or \"aesthetically pleasing\". If the interface matters, say what evidence will prove it, for example a timed task or a counted error rate.",
-            "These criteria drive the plan in B, the tests in C and D, and the judgement in E.",
+            "List 8 to 10 measurable success criteria.",
+            "Ensure each criterion is clear, substantial, specific, testable, and relevant to your solution.",
+            "The set of criteria, when taken as a whole, should describe what a successful product must achieve.",
+            "Avoid subjective criteria such as \"user-friendly GUI\" or \"aesthetically pleasing\". If User Interface (UI) is a criterion, it must be clearly measurable with evidence.",
+            "Word your criteria precisely, relating directly to the required functionalities of your computational solution.",
+            "Remember that these success criteria will be used in planning (Criterion B), development (Criterion D), and evaluation (Criterion E).",
+            "Success criteria are not included in the total word count.",
           ],
         },
-        { type: "callout", kind: "note", label: "Source", text: "The guide definition is that success criteria are measurable outcomes derived from the solution requirements. The 8–10 count, the warning against subjective UI wording, and the weak-versus-usable examples are from class IA notes / teacher support practice built on that definition." },
+        { type: "callout", kind: "note", label: "Source", text: "The guide defines success criteria as measurable outcomes derived from the solution requirements, reused in Criteria B, D and E. This checklist is from the class IA notes (Criterion A: Problem Specification Checklist), built on that definition and the IB Computer Science teacher support material." },
         {
           type: "table",
           title: "Weak versus usable",
@@ -98,7 +101,7 @@ export const topic = {
             ["Works offline", "With the network disabled, the last synchronised timetable still opens and filters by day"],
           ],
         },
-        { type: "callout", kind: "note", label: "Word count", text: "Class IA notes treat the success-criteria list as outside the running prose word count. Keep criteria short and numbered so B, D and E can refer to SC1, SC2, and so on. Still respect the guide's overall 2,000-word documentation limit." },
+        { type: "callout", kind: "note", label: "Word count", text: "Because success criteria sit outside the total word count, keep them short and numbered (SC1, SC2, …) so B, D and E can refer to them cleanly. Still respect the guide's overall 2,000-word documentation limit for the rest of the write-up." },
       ],
     },
     {
