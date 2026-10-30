@@ -44,6 +44,7 @@ export const topic = {
             ["10–12", "Fully functional product; appropriate techniques; evaluates choices; justifies the effectiveness of testing."],
           ],
         },
+        { type: "callout", kind: "note", label: "Source", text: "Criterion D markbands, the 1,000-word recommendation, and the requirement that testing cover correctness, reliability and efficiency are from the IB Diploma Programme Computer science guide (first assessment 2027), Internal assessment, Criterion D: Development." },
         { type: "callout", kind: "exam", label: "Command terms", text: "State → outline → explain → evaluate / justify. The same project can sit mid-band on functionality and higher on testing, or the reverse. Best-fit looks at the balance across all four bullets." },
       ],
     },
@@ -64,6 +65,7 @@ export const topic = {
           ],
         },
         { type: "p", text: "Without a full-source appendix, you cannot be awarded full marks for the techniques demonstrated in Criterion D. Put the complete code in the appendices PDF even though examiners are not required to read it as evidence." },
+        { type: "callout", kind: "note", label: "Source", text: "Guide clarification: techniques means programming the algorithms in code; documentation must highlight key excerpts with comments; excerpts must reference the full source in the appendix. Solutions without that appendix cannot receive full marks for techniques in Criterion D." },
       ],
     },
     {
@@ -81,6 +83,7 @@ export const topic = {
             "Tie each major choice back to a Criterion C algorithm or a success criterion.",
           ],
         },
+        { type: "callout", kind: "note", label: "Source", text: "The guide lists techniques that may include loops, data structures, existing libraries and the integration of software tools. The state → evaluate progression table is class teaching material keyed to the Criterion D command terms." },
         {
           type: "table",
           title: "How depth of discussion rises",
@@ -119,7 +122,7 @@ export const topic = {
             "Justify effectiveness: which success criteria are evidenced, which failed, what you changed.",
           ],
         },
-        { type: "callout", kind: "note", label: "Video", text: "Separate file, at most five minutes, common format. It must show the product working and examples of the testing strategy. Criterion D reading of the documentation expects those examples to match what the video shows." },
+        { type: "callout", kind: "note", label: "Source", text: "The guide requires the video to evidence functionality and testing examples, and requires testing for correctness, reliability and efficiency to be described and justified in the documentation with supporting examples in the video. Video length and format rules are in the guide's Requirements section." },
         { type: "more", href: "ia-e-evaluation.html", label: "Next: Criterion E Evaluation" },
       ],
     },

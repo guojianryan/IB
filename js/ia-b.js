@@ -42,7 +42,7 @@ export const topic = {
             ["3–4", "Constructs a reasonable decomposition; constructs a plan that addresses the success criteria."],
           ],
         },
-        { type: "callout", kind: "note", label: "Syllabus clarification", text: "Decomposition breaks the Criterion A scenario into smaller sub-problems or components. A reasonable decomposition names the essential components that make a plan possible. Diagrams are an effective way to show that." },
+        { type: "callout", kind: "note", label: "Source", text: "Criterion B markbands, the 150-word recommendation, the note that plans may include research such as code libraries, and the clarification of decomposition / reasonable decomposition are from the IB Diploma Programme Computer science guide (first assessment 2027), Internal assessment, Criterion B: Planning. The guide also names Gantt and agile-style charts as effective supports." },
       ],
     },
     {
@@ -71,6 +71,7 @@ export const topic = {
             "A short bulleted list of components with one-line descriptions, if a diagram needs a key.",
           ],
         },
+        { type: "callout", kind: "note", label: "Source", text: "The requirement to decompose the problem scenario into components comes from the guide. The product-decomposition checklist and suggested diagram types are from class IA notes expanding that requirement." },
       ],
     },
     {
@@ -90,6 +91,7 @@ export const topic = {
           ],
         },
         { type: "p", text: "A Gantt chart is a clear way to show order and duration. Keep an editable original. The documentation only needs screenshots, but you may need to update the chart as the project moves." },
+        { type: "callout", kind: "note", label: "Source", text: "The guide requires a chronology for planning, designing, developing, testing and evaluating. The five-stage task checklist and the advice to keep an editable Gantt are from class IA notes." },
       ],
     },
     {
@@ -111,6 +113,7 @@ export const topic = {
             ["Realism", "Estimates fit the 35-hour recommendation and your actual access to hardware or data"],
           ],
         },
+        { type: "callout", kind: "note", label: "Source", text: "Addressing the success criteria in the plan is required by the guide's Criterion B descriptors. The plan-checks table is class teaching material." },
         { type: "callout", kind: "exam", label: "Exam watch", text: "Partial decomposition plus a plan that only touches some criteria sits in 1–2. If SC7 never appears in the plan, Criterion B is already capped, and Criterion E will have nothing solid to evaluate for that criterion." },
         { type: "more", href: "ia-c-system-overview.html", label: "Next: Criterion C System overview" },
       ],

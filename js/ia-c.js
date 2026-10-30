@@ -43,6 +43,7 @@ export const topic = {
             ["5–6", "Constructs a complete system model; constructs algorithms that enable the product to perform; describes a testing strategy that aligns with the success criteria."],
           ],
         },
+        { type: "callout", kind: "note", label: "Source", text: "Criterion C markbands and the 150-word recommendation are from the IB Diploma Programme Computer science guide (first assessment 2027), Internal assessment, Criterion C: System overview." },
       ],
     },
     {
@@ -62,7 +63,7 @@ export const topic = {
           ],
         },
         { type: "p", text: "UML class or component diagrams, sequence sketches and interface wireframes are all usable here when they earn their place. Prefer a small set of clear diagrams over many decorative ones." },
-        { type: "callout", kind: "note", label: "Syllabus clarification", text: "A complete system model does not include the algorithms for each component. Those sit beside the model. The model still has to be complete enough to support a viable testing strategy." },
+        { type: "callout", kind: "note", label: "Source", text: "Guide clarification: a system model consists of diagrams of components and how they are connected, including the user-interface design. A complete system model does not include the algorithms for each component. Those sit beside the model." },
       ],
     },
     {
@@ -80,6 +81,7 @@ export const topic = {
             "Edge cases you already know about, such as empty files or invalid login, named here when they matter.",
           ],
         },
+        { type: "callout", kind: "note", label: "Source", text: "The guide allows algorithms in natural language, flow charts or pseudocode, addressing the individual components of the system model." },
         { type: "p", text: "Partial algorithms that only support some of the product sit in the middle band. Algorithms that enable the product to perform, matching the success criteria, sit at the top." },
       ],
     },
@@ -100,6 +102,7 @@ export const topic = {
             ["T3", "SC8 offline timetable", "Disable network, open app", "Last sync opens; day filter still works"],
           ],
         },
+        { type: "callout", kind: "note", label: "Source", text: "Guide clarification: the testing strategy evaluates whether the solution works as intended, including unexpected or incorrect inputs, and can be shown effectively as a table of proposed test data and expected outcomes. The sample rows are class examples." },
         {
           type: "list",
           items: [

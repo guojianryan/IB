@@ -41,6 +41,7 @@ export const topic = {
             ["3–4", "Evaluates the extent to which the success criteria were met; justifies improvements to the product."],
           ],
         },
+        { type: "callout", kind: "note", label: "Source", text: "Criterion E markbands, the 400-word recommendation, and the requirement that evaluation stay consistent with the Criterion A problem specification and success criteria are from the IB Diploma Programme Computer science guide (first assessment 2027), Internal assessment, Criterion E: Evaluation." },
       ],
     },
     {
@@ -60,6 +61,7 @@ export const topic = {
             ["SC8 offline timetable", "Partial", "Opens offline; day filter crashes on empty cache", "Core requirement holds; filter needs a guard"],
           ],
         },
+        { type: "callout", kind: "note", label: "Source", text: "Evaluating the extent to which success criteria were met is the guide requirement for the top band. The sample evaluation table is class teaching material." },
         { type: "p", text: "Evaluating means weighing strengths and limits, not only listing passes. If a criterion was met only on small data, say so. If you changed the product after a failed test, say what changed and what the retest showed." },
         { type: "callout", kind: "exam", label: "Exam watch", text: "\"All criteria were met\" with no evidence is a statement, not an evaluation. The 3–4 band expects appraisal. Failed or partial criteria, handled honestly with evidence, support a high mark more than empty praise." },
       ],
@@ -89,6 +91,7 @@ export const topic = {
             ["Add more features", "Add conflict detection for overlapping lessons, because teachers currently resolve clashes by hand and that gap sits outside the original criteria"],
           ],
         },
+        { type: "callout", kind: "note", label: "Source", text: "Justifying improvements is required by the guide's 3–4 descriptor for Criterion E. The describe-versus-justify examples are class teaching material." },
         { type: "more", href: "ia-computational-solution.html", label: "Back to IA overview" },
       ],
     },
