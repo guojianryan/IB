@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="IB Computer Science">
+  <rect width="1024" height="1024" rx="225" fill="#101010"/>
+  <rect x="21" y="21" width="982" height="982" rx="210" fill="none" stroke="#3d3a39" stroke-width="5"/>
+  <rect x="256" y="266" width="97" height="492" rx="18" fill="#00d992"/>
+  <rect x="400" y="266" width="92" height="492" fill="#00d992"/>
+  <rect x="430" y="266" width="282" height="230" rx="100" fill="#00d992"/>
+  <rect x="430" y="482" width="312" height="276" rx="110" fill="#00d992"/>
+  <rect x="512" y="333" width="133" height="113" rx="38" fill="#101010"/>
+  <rect x="512" y="543" width="159" height="148" rx="42" fill="#101010"/>
+  <path d="M773 292 L712 481 H763 L696 737 L840 507 H784 L845 292 Z" fill="#00d992"/>
+  <circle cx="174" cy="825" r="12" fill="#00d992"/>
+  <circle cx="230" cy="880" r="8" fill="#00d992"/>
+  <circle cx="154" cy="896" r="8" fill="#00d992"/>
+  <path d="M174 825 L230 880 M174 825 L154 896" stroke="#2fd6a1" stroke-width="7" stroke-linecap="round"/>
+</svg>
