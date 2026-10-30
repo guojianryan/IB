@@ -59,7 +59,7 @@ export const topic = {
             "Key components from your Criterion B decomposition.",
             "Relationships and data or control flow between them.",
             "Rules for interaction, such as when one module may call another.",
-            "User interface design: screens, inputs, outputs, navigation.",
+            "Interface design: screens, inputs, outputs, navigation.",
           ],
         },
         { type: "p", text: "UML class or component diagrams, sequence sketches and interface wireframes are all usable here when they earn their place. Prefer a small set of clear diagrams over many decorative ones." },
