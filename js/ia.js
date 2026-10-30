@@ -1,0 +1,165 @@
+export const topic = {
+  id: "IA",
+  title: "The computational solution",
+  kicker: "IB DP Computer Science · Internal assessment · SL and HL",
+  lede: "The IA is one task: solve a problem you choose, using computational thinking, and show the work. Same criteria at SL and HL. This page is the overview. Each criterion has its own page.",
+  chips: ["IA", "SL and HL", "35 hours", "30 marks"],
+  mapTitle: "The five criteria",
+  mapLede: "Open a criterion for the syllabus wording, the markbands, and a working checklist. Criteria A, B, C and E judge the process. Criterion D judges the product and the testing evidence in the video.",
+  map: [
+    ["ia-a-problem-specification.html", "A · 4", "Problem specification", "The scenario, measurable success criteria, and the computational context."],
+    ["ia-b-planning.html", "B · 4", "Planning", "Decompose the problem, then plan the work against the success criteria."],
+    ["ia-c-system-overview.html", "C · 6", "System overview", "A system model, algorithms for the parts, and a testing strategy."],
+    ["ia-d-development.html", "D · 12", "Development", "Build the product, justify techniques, and show testing in the video."],
+    ["ia-e-evaluation.html", "E · 4", "Evaluation", "Judge the success criteria, and justify improvements."],
+  ],
+  sections: [
+    {
+      id: "what",
+      nav: "What it is",
+      kicker: "Internal assessment · The computational solution",
+      title: "One problem. One solution. Three files.",
+      lede: "The IA brings Theme A and Theme B together. You pick a topic in computer science, specify a problem, and build a software product that shows decomposition, algorithmic thinking, coding, debugging and testing.",
+      blocks: [
+        {
+          type: "pair",
+          able: [
+            "Say what the IA is worth at SL and at HL, and how many hours it is meant to take.",
+            "Name the three files you submit, and what each one is for.",
+            "Name the five criteria in order, and which one carries the most marks.",
+          ],
+          notes: [
+            "SL: 30% of the course. HL: 20%. Recommended teaching time: 35 hours.",
+            "Solution means the documentation plus the video. Product means the software alone.",
+            "The same criteria are used at both levels. The total is 30 marks.",
+          ],
+        },
+        { type: "h3", text: "What you submit" },
+        {
+          type: "table",
+          title: "Three files",
+          head: ["File", "Form", "Rule"],
+          rows: [
+            ["Documentation", "One PDF", "Five sections, one per criterion. At most 2,000 words. Code excerpts, comments and diagrams do not count. Write the word count on the first page."],
+            ["Video", "Separate file", "At most five minutes. Show full functionality and examples of the testing strategy. Common formats such as mp4, avi or wmv."],
+            ["Appendices", "One PDF", "Full source code and other resources you refer to. Not marked as evidence, but without the full code you cannot reach the top of Criterion D for techniques."],
+          ],
+        },
+        {
+          type: "table",
+          title: "Recommended words per criterion",
+          head: ["Criterion", "Marks", "Words"],
+          rows: [
+            ["A Problem specification", "4", "300"],
+            ["B Planning", "4", "150"],
+            ["C System overview", "6", "150"],
+            ["D Development", "12", "1,000"],
+            ["E Evaluation", "4", "400"],
+            ["Total", "30", "2,000"],
+          ],
+        },
+        { type: "callout", kind: "exam", label: "Exam watch", text: "Success criteria from Criterion A are reused in B, D and E. Write them so they can be planned, built, tested and judged. Vague criteria such as \"user-friendly\" collapse every later section." },
+      ],
+    },
+    {
+      id: "problem",
+      nav: "Problem choice",
+      kicker: "Choice of problem",
+      title: "Hard enough to show thinking. Clear enough to finish.",
+      lede: "Pick a problem that needs computational thinking and enough original coding that the work is visibly yours. The syllabus allows any computer science topic that interests you. It does not have to sit inside Theme A or Theme B.",
+      blocks: [
+        {
+          type: "pair",
+          able: [
+            "Apply the 80% rule when you shortlist a problem.",
+            "Distinguish an appropriate coded product from a template-driven one.",
+            "Explain why a thin CRUD front end is a weak IA choice.",
+          ],
+          notes: [
+            "Aim for a problem you are about 80% sure you can solve. Leave room to learn something new.",
+            "Higher-scoring work often shows technical learning beyond the taught syllabus.",
+            "Algorithmic depth matters more than a polished interface with little logic underneath.",
+          ],
+        },
+        { type: "h3", text: "Appropriate forms" },
+        { type: "p", text: "Every solution must be coded. Typical forms include a new system, such as an OOP program, an interactive web application with a database, a game, a mobile app, a simulation or a stand-alone tool, or added functionality on an existing system, such as connecting pages to a database, writing a function or plug-in, or extending a tool you already use." },
+        { type: "h3", text: "Inappropriate products" },
+        {
+          type: "list",
+          items: [
+            "A product built only from copied code, with no documented algorithmic work of your own.",
+            "A website from a template that already fixes the structure and layout.",
+            "An exemplar or software template used as-is, such as a sample database shipped with an application.",
+            "A copied game without major, documented changes to the code.",
+            "A product that breaks the ethical rules for consent and data.",
+            "An app built only with a wizard or drag-and-drop builder that needs no real code development.",
+          ],
+        },
+        { type: "p", text: "Simple front ends over create-read-update-delete databases, such as a basic blog or to-do list, usually lack algorithmic depth and rarely score well. Whatever you choose, the documentation must show your algorithmic thinking." },
+        { type: "callout", kind: "note", label: "Academic integrity", text: "The product must be your own work. If you use AI-generated content, including code, credit it clearly. Most of the programming should be independently produced. Teachers may advise on one draft. They must not edit it for you. The IA and the Extended Essay cannot be the same piece of work." },
+        { type: "more", href: "ia-a-problem-specification.html", label: "Start with Criterion A" },
+      ],
+    },
+    {
+      id: "ethics",
+      nav: "Ethics",
+      kicker: "Requirements · Ethics",
+      title: "Consent, data, and what you may use",
+      lede: "The guide expects you to treat people and data carefully while you research and build.",
+      blocks: [
+        {
+          type: "list",
+          items: [
+            "Get consent from anyone involved in the development before the investigation begins.",
+            "Get written consent from the owner before you work on an existing system, for example a security analysis on a live network.",
+            "Store collected data securely and keep it confidential.",
+            "Use collected data only for this computational solution, unless you have explicit permission for another use.",
+            "Prefer original data you collect yourself when that is possible.",
+          ],
+        },
+      ],
+    },
+  ],
+  mcqs: [
+    {
+      q: "Which row matches the IA weightings and time?",
+      options: [
+        "SL 20%, HL 30%, 15 hours",
+        "SL 30%, HL 20%, 35 hours",
+        "SL 30%, HL 30%, 35 hours",
+        "SL 20%, HL 20%, 23 hours",
+      ],
+      answer: 1,
+      why: "The computational solution is 30% at SL and 20% at HL. The recommended teaching allocation is 35 hours for both levels.",
+    },
+    {
+      q: "Which submission rule is correct?",
+      options: [
+        "The documentation may be three PDFs, one per theme",
+        "The video may be ten minutes if it shows every test case",
+        "Code excerpts, comments and diagrams sit outside the 2,000-word limit",
+        "Appendices are marked instead of Criterion D",
+      ],
+      answer: 2,
+      why: "Documentation is one PDF of at most 2,000 words. Code excerpts, comments and diagrams are excluded from that count. The video is at most five minutes. Appendices are not used as marking evidence, but the full source must be there for Criterion D techniques.",
+    },
+    {
+      q: "Which product is appropriate for the IA?",
+      options: [
+        "An unmodified website from a hosted template",
+        "A drag-and-drop app with no code you wrote",
+        "A coded simulation you designed, with algorithms you can explain",
+        "A sample database template used exactly as shipped",
+      ],
+      answer: 2,
+      why: "The product must be coded and must show your algorithmic thinking. Templates, wizards and unmodified exemplars are listed as inappropriate.",
+    },
+  ],
+  checks: [
+    "State the SL and HL weightings, the hour allocation, and the 30-mark total.",
+    "List the three submission files and one rule for each.",
+    "Name the five criteria in order and their marks.",
+    "Give one appropriate product form and one inappropriate product form.",
+    "Explain why success criteria must be measurable before you leave Criterion A.",
+  ],
+};

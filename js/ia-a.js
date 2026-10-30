@@ -1,0 +1,154 @@
+export const topic = {
+  id: "IA-A",
+  title: "Criterion A · Problem specification",
+  kicker: "Internal assessment · 4 marks · about 300 words",
+  lede: "Criterion A is the base for everything that follows. Define the problem, state measurable success criteria, and explain the computational context. Planning, development and evaluation all hang on this page.",
+  chips: ["Criterion A", "4 marks", "≈ 300 words", "SL and HL"],
+  mapTitle: "What Criterion A asks",
+  mapLede: "The syllabus wants three things: a problem scenario with measurable requirements, appropriate success criteria, and an explained computational context.",
+  map: [
+    ["#scenario", "A.1", "Problem scenario", "What is wrong now, who is affected, and what a successful solution must achieve."],
+    ["#criteria", "A.2", "Success criteria", "Eight to ten testable outcomes that later criteria will plan, build and judge."],
+    ["#context", "A.3", "Computational context", "Language, tools, data and environment, justified for this problem."],
+  ],
+  sections: [
+    {
+      id: "bands",
+      nav: "Markbands",
+      kicker: "Criterion A · Problem specification · 4 marks",
+      title: "Describe, state, explain",
+      lede: "Top marks need a described scenario with measurable requirements, appropriate success criteria, and an explained choice of computational context. Outlines and limited criteria stay in the lower band.",
+      blocks: [
+        {
+          type: "pair",
+          able: [
+            "Describe a problem scenario with measurable solution requirements.",
+            "State a set of appropriate success criteria.",
+            "Explain why the chosen computational context fits this problem.",
+          ],
+          notes: [
+            "Recommended length: about 300 words. Success criteria themselves are outside the word count.",
+            "You need the skills, hardware, software and data to actually build what you propose.",
+            "These success criteria are reused in Criteria B, D and E.",
+          ],
+        },
+        {
+          type: "table",
+          title: "Level descriptors",
+          head: ["Marks", "The response"],
+          rows: [
+            ["0", "Does not reach the standard below."],
+            ["1–2", "Outlines a problem scenario; states limited success criteria; outlines the nature of the solution in a computational context."],
+            ["3–4", "Describes the problem scenario in terms of its measurable solution requirements; states appropriate success criteria; explains the choice of computational context."],
+          ],
+        },
+        { type: "callout", kind: "exam", label: "Command terms", text: "Outline is brief. Describe is detailed. Explain gives reasons. The jump from 1–2 to 3–4 is mostly the move from outline to describe/explain, and from limited criteria to appropriate ones." },
+      ],
+    },
+    {
+      id: "scenario",
+      nav: "Scenario",
+      kicker: "Problem scenario",
+      title: "A clear problem with measurable requirements",
+      lede: "The scenario is a clear description of the problem, including what a successful solution must achieve. It can sit in the world around you, in another field of knowledge, or in a current issue in computing.",
+      blocks: [
+        { type: "h3", text: "Cover these questions" },
+        {
+          type: "list",
+          items: [
+            "What is the current situation?",
+            "What causes the problem?",
+            "Who is affected?",
+            "Are there existing computational solutions, and what are their shortcomings?",
+            "Why is a computational solution valuable here?",
+            "What is your proposed solution, and what are its core objectives in measurable terms?",
+          ],
+        },
+        { type: "p", text: "Write the scenario so a stranger can see the gap between now and a working product. Vague background without measurable requirements will not support Criterion B or E later." },
+      ],
+    },
+    {
+      id: "criteria",
+      nav: "Success criteria",
+      kicker: "Success criteria",
+      title: "Eight to ten outcomes you can test",
+      lede: "Success criteria are measurable outcomes derived from the solution requirements. Taken together, they describe what a successful product must achieve.",
+      blocks: [
+        {
+          type: "list",
+          items: [
+            "Aim for about 8 to 10 criteria.",
+            "Each one should be clear, substantial, specific, testable and relevant.",
+            "Word them as required functionalities of the product, not as hopes about how it feels.",
+            "Avoid subjective lines such as \"user-friendly GUI\" or \"aesthetically pleasing\". If the interface matters, say what evidence will prove it, for example a timed task or a counted error rate.",
+            "These criteria drive the plan in B, the tests in C and D, and the judgement in E.",
+          ],
+        },
+        {
+          type: "table",
+          title: "Weak versus usable",
+          head: ["Weak", "Usable"],
+          rows: [
+            ["The app is fast", "A route for 20 stops is computed in under 3 seconds on the test laptop"],
+            ["Nice interface", "A new user completes enrolment in under two minutes without written help"],
+            ["Stores data safely", "Passwords are stored only as salted hashes; the raw password never appears in logs"],
+            ["Works offline", "With the network disabled, the last synchronised timetable still opens and filters by day"],
+          ],
+        },
+        { type: "callout", kind: "note", label: "Word count", text: "Success criteria are not included in the total word count. Still keep them short and numbered so B, D and E can refer to SC1, SC2, and so on." },
+      ],
+    },
+    {
+      id: "context",
+      nav: "Context",
+      kicker: "Computational context",
+      title: "Name the stack. Justify it for this problem.",
+      lede: "The computational context is the specific area of computing you will use. Explain why those choices fit the scenario. Generic praise for a language is not enough.",
+      blocks: [
+        { type: "h3", text: "What to identify" },
+        {
+          type: "list",
+          items: [
+            "Programming language, for example Python or Java.",
+            "Software environment: libraries, frameworks, operating system.",
+            "Hardware environment: devices, sensors, components, if they matter.",
+            "Data environment: sources, databases, file structures.",
+            "Implementation environment: networking, access, compatibility.",
+          ],
+        },
+        { type: "p", text: "Justify each important choice against the scenario. Mention alternatives you considered when you can, and say why you rejected them. \"Python is simple to learn\" is weak. \"Python's csv and matplotlib libraries let me parse the lab's exported logs and plot error rates without a separate charting tool\" is tied to the problem." },
+        { type: "more", href: "ia-b-planning.html", label: "Next: Criterion B Planning" },
+      ],
+    },
+  ],
+  mcqs: [
+    {
+      q: "Which success criterion is appropriate?",
+      options: [
+        "The product has a modern, user-friendly design",
+        "The search returns matching student names in under one second on a 5,000-row file",
+        "The code is well commented",
+        "The client likes the colours",
+      ],
+      answer: 1,
+      why: "Appropriate criteria are measurable and tied to product behaviour. Taste, \"modern\" and \"well commented\" are not testable success criteria for Criterion A.",
+    },
+    {
+      q: "A response outlines a scenario, lists two vague criteria, and names Python without reasons. Which band fits best?",
+      options: [
+        "0",
+        "1–2",
+        "3–4",
+        "Full marks if the idea is interesting",
+      ],
+      answer: 1,
+      why: "That matches outline / limited criteria / outlined context. Top marks need describe, appropriate criteria, and an explained computational context.",
+    },
+  ],
+  checks: [
+    "Describe your problem scenario with measurable requirements in a few sentences.",
+    "List 8–10 success criteria that a stranger could test.",
+    "Explain your language and tools with reasons tied to this problem, not to fashion.",
+    "State how Criterion A feeds B, D and E.",
+  ],
+};
